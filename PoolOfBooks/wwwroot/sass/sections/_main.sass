@@ -1,0 +1,71 @@
+.main
+    &-wrap
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding: 169px 0 100px
+    &-content
+        max-width: 585px
+        &__title
+            font-family: $third-font
+            font-style: normal
+            font-weight: bold
+            font-size: 48px
+            line-height: 60px
+            letter-spacing: 0.2px
+            margin-top: 0
+            margin-bottom: 28px
+            &_bright
+                color: $bright-color
+        &__author
+            display: block
+            font-family: $secondary-font
+            font-style: normal
+            font-weight: 500
+            font-size: 20px
+            line-height: 24px
+            letter-spacing: 0.2px
+            margin-bottom: 36px
+            text-transform: uppercase
+        &__description
+            font-family: $default-font
+            font-style: normal
+            font-weight: normal
+            font-size: 18px
+            line-height: 32px
+            color: $text-color
+            margin-bottom: 53px
+            margin-top: 0
+        &__btn
+            font-family: $default-font
+            font-style: normal
+            font-weight: bold
+            border-radius: 8px
+            border: 2px solid #1565D8
+            text-transform: uppercase
+            &_fill
+                font-size: 16px
+                line-height: 22px
+                padding: 18px 37px
+                background-color: $default-color
+                color: $light-color
+                border: none
+                margin-right: 23px
+                max-width: 234px
+            &_transparent
+                font-size: 18px
+                line-height: 25px
+                padding: 15px 48px
+                color: $default-color
+                background-color: transparent
+                max-width: 234px
+    &__img
+        width: 250px
+        height: 374px
+        object-fit: cover
+        box-shadow: 0px 20px 24px rgba(0, 0, 0, 0.08)
+        &-wrap
+            background-color: rgba(179, 186, 197, 0.1)
+            padding: 114px 119px 103px
+.button
+    cursor: pointer

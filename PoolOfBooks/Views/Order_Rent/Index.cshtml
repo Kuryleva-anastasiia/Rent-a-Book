@@ -1,0 +1,65 @@
+﻿@model IEnumerable<PoolOfBooks.Models.Order_Rent>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_client)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_begin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_end)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id_client)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_begin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_end)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

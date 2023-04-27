@@ -1,0 +1,84 @@
+.subscribe
+    padding-bottom: 100px
+    &__wrap
+        position: relative
+        background: $default-color
+        border-radius: 12px
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: 60px 58px 86px 64px
+        overflow: hidden
+        &::after
+            content: url(../img/Oval-right.png)
+            position: absolute
+            bottom: 12%
+            left: -49%
+            z-index: 0
+        &::before
+            content: url(../img/Oval-right.png)
+            position: absolute
+            right: -47%
+            top: -27%
+            z-index: 0
+    &__title
+        font-family: $third-font
+        font-style: normal
+        font-weight: bold
+        font-size: 36px
+        line-height: 48px
+        letter-spacing: 0.2px
+        color: $light-color
+        max-width: 393px
+        margin: 0
+        z-index: 2
+    &__form
+        height: 56px
+        width: 447px
+        position: relative
+        margin-top: 18px
+    &__input
+        height: 100%
+        width: 100%
+        background: $light-color
+        border: 1px solid #C3CAD9
+        border-radius: 8px
+        padding: 0 160px 0 48px
+    &__icon
+        position: absolute
+        left: 20px
+        top: 37%
+    &__btn
+        position: absolute
+        right: 4px
+        top: 4px
+        bottom: 4px
+        padding: 0 27px
+        font-family: $default-font
+        font-style: normal
+        font-weight: bold
+        font-size: 16px
+        line-height: 22px
+        color: $light-color
+        background-color: $bright-color
+        border-radius: 4px
+        border: none
+        outline: none
+        cursor: pointer
+.return
+    padding: 120px 0 70px
+    &__btn
+        display: inline-block
+        font-size: 16px
+        text-decoration: none
+        padding: 10px
+        border: 1px solid $dark-color
+        color: $dark-color
+        border-radius: 8px
+        margin-bottom: 25px
+    &__success
+        font-size: 32px
+        margin-bottom: 25px
+        color: $dark-color
+.error
+    color: red

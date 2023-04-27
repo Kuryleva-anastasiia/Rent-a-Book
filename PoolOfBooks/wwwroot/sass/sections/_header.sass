@@ -1,0 +1,42 @@
+.header
+    position: fixed
+    left: 0
+    right: 0
+    top: 0
+    background-color: $light-color
+    z-index: 99
+    &-wrap
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: 34px 0 12px
+        &__nav
+            margin-left: auto
+            margin-right: 60px
+            &-wrap
+                display: flex
+        &__button
+            font-weight: bold
+            font-size: 16px
+            line-height: 22px
+            color: $default-color
+            background-color: transparent
+            padding: 11px 33px
+            border: 2px solid $default-color
+            border-radius: 8px
+            cursor: pointer
+.nav
+    list-style: none
+    display: flex
+    color: $dark-color
+    padding-left: 0
+    &__item:not(:last-child)
+        margin-right: 24px
+    &__link
+        text-decoration: none
+        font-weight: 600
+        font-size: 16px
+        line-height: 22px
+        color: inherit
+.menu-btn
+    display: none
