@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Details";
+
+    string id = Model.id.ToString();
+    string name = Model.name.ToString();
 }
 
 <h1>Details</h1>
@@ -9,6 +12,14 @@
 <div>
     <h4>Books</h4>
     <hr />
+    <a href="~/Books/Index#@(id)">Вернуться</a>
+    <div class="catalog-card__wrap-img">
+        <a action="get" href="~/Books/Details/@id">
+            <img src="~/img/books/@(id).jpg"
+                 alt="Book: @(name)"
+                 class="products-card__img" />
+        </a>
+    </div>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.name)
@@ -74,5 +85,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    
 </div>

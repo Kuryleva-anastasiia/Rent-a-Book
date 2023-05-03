@@ -1,6 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PoolOfBooks.Data;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PoolOfBooksContext>(options =>
@@ -8,6 +13,11 @@ builder.Services.AddDbContext<PoolOfBooksContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Подключаю куки
+builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/Users/Login");
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -24,11 +34,48 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
 	pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapGet("/Users/SignIn/{id:int}", async (string? returnUrl, HttpContext context, int id, PoolOfBooksContext _context) =>
+{
+
+    var user = _context.Users.FirstOrDefaultAsync(u => u.id ==id);
+
+    if (user.Result != null && user.Result.role != null)
+    {
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Result.login), new Claim(ClaimTypes.Role, user.Result.role), new Claim("ID", user.Result.id.ToString()) };
+        // создаем объект ClaimsIdentity
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+        // установка аутентификационных куки
+        await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+        return Results.Redirect($"~/Users/Details/{user.Result.id}");
+    }
+    return Results.Unauthorized();
+});
+
+app.MapGet("/SignInCheckForAvatar", (string? returnUrl, HttpContext context) =>
+{
+    var user = context.User.Identity;
+    if (user != null)
+    {
+        if (user.IsAuthenticated)
+        {
+            string id = context.User.FindFirst("ID").Value.ToString();
+            if (id != null)
+            {
+                return Results.Redirect(returnUrl ?? $"~/Users/Details/{id}");
+            }
+        }
+        else { return Results.Redirect(returnUrl ?? "~/Users/Login"); }
+    }
+    else { return Results.Redirect(returnUrl ?? "~/Users/Login"); }
+    return Results.Redirect(returnUrl ?? "~/Users/Login");
+});
 
 app.Run();

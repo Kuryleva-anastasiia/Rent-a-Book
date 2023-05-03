@@ -1,9 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
@@ -13,7 +23,7 @@ namespace PoolOfBooks.Controllers
     public class UsersController : Controller
     {
         private readonly PoolOfBooksContext _context;
-
+        
         public UsersController(PoolOfBooksContext context)
         {
             _context = context;
@@ -28,6 +38,7 @@ namespace PoolOfBooks.Controllers
         }
 
         // GET: Users/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Users == null)
@@ -45,6 +56,7 @@ namespace PoolOfBooks.Controllers
             return View(users);
         }
 
+
         // GET: Users/Create
         public IActionResult Create()
         {
@@ -60,11 +72,79 @@ namespace PoolOfBooks.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(users);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (users.login != null && users.password != null)
+                {
+                    //Использование хранимой процедуры
+                    var log = new Microsoft.Data.SqlClient.SqlParameter("@login", users.login);
+                    var pass = new Microsoft.Data.SqlClient.SqlParameter("@password", users.password);
+                    var role = new Microsoft.Data.SqlClient.SqlParameter("@role", "client");
+                    var l_name = new Microsoft.Data.SqlClient.SqlParameter("@last_name", users.last_name);
+                    var f_name = new Microsoft.Data.SqlClient.SqlParameter("@first_name", users.first_name);
+                    var th_name = new Microsoft.Data.SqlClient.SqlParameter("@third_name", users.third_name);
+                    var address = new Microsoft.Data.SqlClient.SqlParameter("@address", users.address);
+
+
+                    try
+                    {
+                        
+                        users.password = Crypto.Hash(users.password.ToString(), "SHA-256");
+
+                        _context.Add(users);
+                        await _context.SaveChangesAsync();
+                        return Redirect($"~/Users/SignIn/{users.id}");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.ToString());
+                    }
+                }
+                else { ModelState.AddModelError(string.Empty, "Введите логин и пароль!"); }
             }
             return View(users);
+        }
+
+        // GET: Users/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginAsync([Bind("login,password")] Users model)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                if (model.login != null && model.password != null)
+                {
+
+                    //Использование хранимой процедуры
+                    //var log = new Microsoft.Data.SqlClient.SqlParameter("@login", model.login);
+                    var p  = Crypto.Hash(model.password, "SHA-256");
+                    //var pass = new Microsoft.Data.SqlClient.SqlParameter("@password", p);
+                    //var users = _context.Users.FromSqlRaw("Select id from Users where login = '@login' and password = '@password'", log, pass).ToList();
+                    // Verification.    
+
+                    var user = _context.Users.FirstOrDefaultAsync(u => u.login == model.login && u.password == p);
+
+                    if (user.Result != null && user.Result.role != null)
+                    {
+                        // Initialization.    
+                        int id = Convert.ToInt32(user.Result.id);
+
+                        model.id = id;
+                        
+                        return Redirect($"~/Users/SignIn/{id}");
+                    }
+                    else
+                    {
+                        Results.NotFound(new { message = "Пользователь не найден" });
+                        return View(model);
+                    }
+                }
+            }
+            return View();
         }
 
         // GET: Users/Edit/5
