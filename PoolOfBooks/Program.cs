@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Azure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PoolOfBooks.Data;
+using PoolOfBooks.Models;
 using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PoolOfBooksContext>(options =>
@@ -28,6 +31,8 @@ if (!app.Environment.IsDevelopment())
 	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 	app.UseHsts();
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -76,6 +81,16 @@ app.MapGet("/SignInCheckForAvatar", (string? returnUrl, HttpContext context) =>
     }
     else { return Results.Redirect(returnUrl ?? "~/Users/Login"); }
     return Results.Redirect(returnUrl ?? "~/Users/Login");
+});
+
+
+
+app.MapGet("/CartAdd/{clientId}/{bookId}/{status}", (string? returnUrl, HttpContext context, PoolOfBooksContext _context, int clientId, int bookId, string status) =>
+{
+    var cart = new Cart(clientId, bookId, status);
+    _context.Cart.Add(cart);
+    _context.SaveChanges();
+    return Results.Redirect($"~/Carts/Details/{clientId}");
 });
 
 app.Run();

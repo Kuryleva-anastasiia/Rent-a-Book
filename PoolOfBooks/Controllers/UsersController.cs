@@ -111,30 +111,27 @@ namespace PoolOfBooks.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginAsync([Bind("login,password")] Users model)
+        public IActionResult Login([Bind("login,password")] Users model)
         {
-           
+
             if (ModelState.IsValid)
             {
                 if (model.login != null && model.password != null)
                 {
 
-                    //Использование хранимой процедуры
-                    //var log = new Microsoft.Data.SqlClient.SqlParameter("@login", model.login);
-                    var p  = Crypto.Hash(model.password, "SHA-256");
-                    //var pass = new Microsoft.Data.SqlClient.SqlParameter("@password", p);
-                    //var users = _context.Users.FromSqlRaw("Select id from Users where login = '@login' and password = '@password'", log, pass).ToList();
-                    // Verification.    
+                    
+                    var p = Crypto.Hash(model.password, "SHA-256");
+                        
 
                     var user = _context.Users.FirstOrDefaultAsync(u => u.login == model.login && u.password == p);
 
                     if (user.Result != null && user.Result.role != null)
                     {
-                        // Initialization.    
+                         
                         int id = Convert.ToInt32(user.Result.id);
 
                         model.id = id;
-                        
+
                         return Redirect($"~/Users/SignIn/{id}");
                     }
                     else

@@ -14,8 +14,7 @@
         public string status { get; set; } = "аренда";
         public int? count_was_read { get; set; }
 
-
-
+        public List<Users>? Users { get; set; }
 
     }
 }

@@ -18,36 +18,38 @@ namespace PoolOfBooks.Controllers
         {
             _context = context;
         }
-
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-              return _context.Cart != null ? 
-                          View(await _context.Cart.ToListAsync()) :
-                          Problem("Entity set 'PoolOfBooksContext.Cart'  is null.");
+            var poolOfBooksContext = _context.Cart.Include(c => c.Books).Include(c => c.Users);
+            return View(await poolOfBooksContext.ToListAsync());
         }
 
         // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.Cart == null)
             {
                 return NotFound();
             }
 
-            var cart = await _context.Cart
-                .FirstOrDefaultAsync(m => m.id == id);
+            var cart = _context.Cart
+                .Include(c => c.Books)
+                .Include(c => c.Users).Where(x => x.id_client == id);
+
             if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(cart);
+            return View(cart.ToListAsync());
         }
 
         // GET: Carts/Create
         public IActionResult Create()
         {
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id");
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id");
             return View();
         }
 
@@ -56,7 +58,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,id_client,id_book")] Cart cart)
+        public async Task<IActionResult> Create([Bind("id,id_client,id_book,status")] Cart cart)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +66,8 @@ namespace PoolOfBooks.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", cart.id_book);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", cart.id_client);
             return View(cart);
         }
 
@@ -80,6 +84,8 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", cart.id_book);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", cart.id_client);
             return View(cart);
         }
 
@@ -88,7 +94,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,id_client,id_book")] Cart cart)
+        public async Task<IActionResult> Edit(int id, [Bind("id,id_client,id_book,status")] Cart cart)
         {
             if (id != cart.id)
             {
@@ -115,6 +121,8 @@ namespace PoolOfBooks.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", cart.id_book);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", cart.id_client);
             return View(cart);
         }
 
@@ -127,6 +135,8 @@ namespace PoolOfBooks.Controllers
             }
 
             var cart = await _context.Cart
+                .Include(c => c.Books)
+                .Include(c => c.Users)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (cart == null)
             {

@@ -2,10 +2,17 @@
 
 @{
     ViewData["Title"] = "Details";
+    var id = User.FindFirst("ID").Value;
 }
 
 <h1>Details</h1>
-<a ><h4>Корзина</h4></a>
+<a action="~/Cart/Details/@id)"><h4>Корзина</h4></a>
+
+<h5>Аренда</h5>
+
+
+<h5>Покупка</h5>
+    
 <hr />
 <div>
     <h4>Users</h4>
@@ -45,6 +52,68 @@
 </div>
 <hr />
 <h4>Заказы (Аренда)</h4>
+@{
+    if (Model.Order_Rents != null)
+    {
+        var orders = Model.Order_Rents.ToList();
+
+        @if (orders != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Номер заказа</strong>
+                        </th>
+                        <th>
+                            <strong>Дата оформления</strong>
+                        </th>
+                        <th>
+                            <strong>Дата окончания</strong>
+                        </th>
+                        <th>
+                            <strong>Сумма</strong>
+                        </th>
+                        <th>
+                            <strong>Статус</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in orders)
+                    {
+                        <tr>
+                            <td>
+                                @c.id
+                            </td>
+                            <td>
+                                @c.date_begin
+                            </td>
+                            <td>
+                                @c.date_end
+                            </td>
+                            <td>
+                                @c.sum
+                            </td>
+                            <td>
+                                @c.status
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+
+        }
+    }
+   
+}
+
+
+
 <hr />
 <h4>Заказы (Покупка)</h4>
 <div>

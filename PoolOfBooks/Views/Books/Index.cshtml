@@ -1,15 +1,6 @@
 ﻿@model IEnumerable<PoolOfBooks.Models.Books>
 
-@*@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
-@Html.DisplayNameFor(model => model.name)
-@Html.DisplayFor(modelItem => item.name)
-<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
 <div class="container catalog">
 
     @foreach (var item in Model)
@@ -33,7 +24,30 @@
                 <span class="catalog__author products-card__collection">@Html.DisplayFor(modelItem => item.author)</span>
                 <span class="catalog__price products-card__price">@Html.DisplayFor(modelItem => item.price) &#8381;</span>
                 <div class="products-card__wrap-btn">
-                    <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                    @if (User.Identity != null)
+                    {
+                        @if (User.Identity.IsAuthenticated == true)
+                        {
+                            <a href="~/CartAdd/@(User.FindFirst("ID").Value.ToString())/@(item.id)/@(item.status)">
+                                <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                            </a>
+
+                        }
+                        else
+                        {
+                            <a href="~/SignInCheckForAvatar">
+                            <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a href="~/SignInCheckForAvatar">
+                            <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                        </a>
+                    }
+                    
+
 
                 </div>
             </div>

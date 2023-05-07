@@ -2,10 +2,6 @@
 {
     public class Users
     {
-        public Users()
-        {
-            this.Cart = new HashSet<Cart>();
-        }
 
         public int id { get; set; }
         public string login { get; set; } = "";
@@ -15,8 +11,8 @@
         public string? first_name { get; set; }
         public string? third_name { get; set; }
         public string? address { get; set; } = "";
-
-        public virtual ICollection<Cart>? Cart { get; set; }
+        public List<Order_Rent>? Order_Rents { get; set; }
+        public List<Books>? Books { get; set; }
     }
 
 
