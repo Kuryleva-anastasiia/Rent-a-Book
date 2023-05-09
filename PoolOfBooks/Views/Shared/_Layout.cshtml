@@ -168,13 +168,16 @@
         </div>
         <!-- /.container -->
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script src="~/js/jquery.mask.min.js"></script>
     <script src="~/js/swiper-bundle.min.js"></script>
     <script src="~/js/jquery.fancybox.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
 </body>
 </html>

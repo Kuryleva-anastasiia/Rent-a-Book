@@ -1,53 +1,80 @@
 ﻿@model IEnumerable<PoolOfBooks.Models.Cart>
 
+
 @{
-    ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Cart</h4>
+
+<div class="container">
+    <h4 style="margin-top: 80px;">Корзина</h4>
     <hr />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Users.first_name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Books.name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.status)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Users.first_name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Books.name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.status)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h5>Аренда</h5>
+    @foreach (var item in Model.Where(x => x.status == "аренда"))
+    {
+        string id = item.Books.id.ToString();
+        string name = item.Books.name.ToString();
+        <div class="catalog__card" id="@(id)">
+            <div class="catalog-card__wrap-img">
+                <a action="get" href="~/Books/Details/@id">
+                    <img src="~/img/books/@(id).jpg"
+                         alt="Book: @(name)"
+                         class="products-card__img" />
+                </a>
+            </div>
+            <!-- /.products-card__wrap-img -->
+            <div class="products-card__content">
+                <h4 class="catalog__title products-card__title">
+                    @Html.DisplayFor(modelItem => item.Books.name)
+                </h4>
+                <span class="catalog__author products-card__collection">@Html.DisplayFor(modelItem => item.Books.author)</span>
+                <span class="catalog__price products-card__price">@Html.DisplayFor(modelItem => item.Books.price) &#8381;</span>
+                
+                <a href="~/carts/Delete/@(item.id)">
+                    <input type="submit" value="Удалить" class="button catalog__btn products-card__btn" />
+                </a>
+            </div>
+            <!-- /.products-card__content -->
+        </div>
+        <!-- /.products-card products__card -->
+    }
 
-</div>
-<div>
-    <a asp-action="Index">Back to List</a>
+    <a href="~/CreateOrderRent">
+        <button class="button catalog__btn products-card__btn">Оформить</button>
+    </a>
+
+    <hr />
+    <h5>Продажа</h5>
+
+    @foreach (var item in Model.Where(x => x.status == "продажа"))
+    {
+        string id = item.Books.id.ToString();
+        string name = item.Books.name.ToString();
+        <div class="catalog__card" id="@(id)">
+            <div class="catalog-card__wrap-img">
+                <a action="get" href="~/Books/Details/@id">
+                    <img src="~/img/books/@(id).jpg"
+                         alt="Book: @(name)"
+                         class="products-card__img" />
+                </a>
+            </div>
+            <!-- /.products-card__wrap-img -->
+            <div class="products-card__content">
+                <h4 class="catalog__title products-card__title">
+                    @Html.DisplayFor(modelItem => item.Books.name)
+                </h4>
+                <span class="catalog__author products-card__collection">@Html.DisplayFor(modelItem => item.Books.author)</span>
+                <span class="catalog__price products-card__price">@Html.DisplayFor(modelItem => item.Books.price) &#8381;</span>
+                <a href="~/carts/Delete/@(item.id)">
+                    <input type="submit" value="Удалить" class="button catalog__btn products-card__btn" />
+                </a>
+            </div>
+            <!-- /.products-card__content -->
+        </div>
+        <!-- /.products-card products__card -->
+    }
+            
+    <a href="~/CreateOrderBuy">
+        <button class="button catalog__btn products-card__btn">Оформить</button>
+    </a>
 </div>

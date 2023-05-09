@@ -1,17 +1,14 @@
 ﻿@model PoolOfBooks.Models.Users
 
 @{
-    ViewData["Title"] = "Details";
     var id = User.FindFirst("ID").Value;
+    var count = ViewData["CartCount"];
 }
+@if (User.IsInRole("client"))
+{
+    <h1 style="margin-top: 80px;">Details</h1>
+<a href="~/Carts/Details/@(id)"><h4>Корзина (@count)</h4></a>
 
-<h1>Details</h1>
-<a action="~/Cart/Details/@id)"><h4>Корзина</h4></a>
-
-<h5>Аренда</h5>
-
-
-<h5>Покупка</h5>
     
 <hr />
 <div>
@@ -51,13 +48,14 @@
     </dl>
 </div>
 <hr />
-<h4>Заказы (Аренда)</h4>
-@{
-    if (Model.Order_Rents != null)
-    {
-        var orders = Model.Order_Rents.ToList();
+    <h4>Заказы (Аренда)</h4>
 
-        @if (orders != null)
+    if (Model.Order_Rent != null)
+    {
+        var orders = Model.Order_Rent.Where(x => x.id_client == Convert.ToInt32(id));
+
+
+        @if (orders.Count() != 0)
         {
             <table class="table">
                 <thead>
@@ -93,7 +91,7 @@
                                 @c.date_end
                             </td>
                             <td>
-                                @c.sum
+                                @c.sum.Value
                             </td>
                             <td>
                                 @c.status
@@ -108,15 +106,78 @@
         {
 
         }
-    }
-   
-}
 
+    }
 
 
 <hr />
-<h4>Заказы (Покупка)</h4>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <h4>Заказы (Покупка)</h4>
+    if (Model.Order_Buy != null)
+    {
+        var buys = Model.Order_Buy.Where(x => x.id_client == Convert.ToInt32(id));
+
+        @if (buys.Count() != 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Номер заказа</strong>
+                        </th>
+                        <th>
+                            <strong>Дата оформления</strong>
+                        </th>
+                        <th>
+                            <strong>Сумма</strong>
+                        </th>
+                        <th>
+                            <strong>Статус</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in buys)
+                    {
+                        <tr>
+                            <td>
+                                @c.id
+                            </td>
+                            <td>
+                                @c.date
+                            </td>
+                            <td>
+                                @c.sum.Value
+                            </td>
+                            <td>
+                                @c.status
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    }
+    
+
+}
+else
+{
+    <div style="container">
+        <ul style="margin-top: 100px;">
+            <a href="~/Order_Rent/index">
+            <li>Заказы (Аренда)</li></a>
+            <a href="~/Order_Buy/index">
+            <li>Заказы (Продажа)</li></a>
+            <a href="~/Books/index">
+            <li>Книги</li></a>
+            <a href="~/Categories/index">
+            <li>Категории</li></a>
+            <a href="~/Users/index">
+            <li>Категории</li></a>
+        </ul>
+    </div>
+    
+}
+

@@ -13,8 +13,10 @@
         public decimal? price { get; set; }
         public string status { get; set; } = "аренда";
         public int? count_was_read { get; set; }
+        public ICollection<Cart> Carts { get; } = new List<Cart>();
+        public ICollection<Order_Rent_Books> RentBooks { get; } = new List<Order_Rent_Books>();
+        public ICollection<Order_Buy_Books> BuyBooks { get; } = new List<Order_Buy_Books>();
 
-        public List<Users>? Users { get; set; }
 
     }
 }

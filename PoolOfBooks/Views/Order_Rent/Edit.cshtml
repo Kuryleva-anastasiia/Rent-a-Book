@@ -15,7 +15,7 @@
             <input type="hidden" asp-for="id" />
             <div class="form-group">
                 <label asp-for="id_client" class="control-label"></label>
-                <input asp-for="id_client" class="form-control" />
+                <select asp-for="id_client" class="form-control" asp-items="ViewBag.id_client"></select>
                 <span asp-validation-for="id_client" class="text-danger"></span>
             </div>
             <div class="form-group">

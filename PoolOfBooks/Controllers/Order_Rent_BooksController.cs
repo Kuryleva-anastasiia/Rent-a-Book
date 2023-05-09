@@ -22,9 +22,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Rent_Books
         public async Task<IActionResult> Index()
         {
-              return _context.Order_Rent_Books != null ? 
-                          View(await _context.Order_Rent_Books.ToListAsync()) :
-                          Problem("Entity set 'PoolOfBooksContext.Order_Rent_Books'  is null.");
+            var poolOfBooksContext = _context.Order_Rent_Books.Include(o => o.Books).Include(o => o.Order_Rent);
+            return View(await poolOfBooksContext.ToListAsync());
         }
 
         // GET: Order_Rent_Books/Details/5
@@ -36,6 +35,8 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Rent_Books = await _context.Order_Rent_Books
+                .Include(o => o.Books)
+                .Include(o => o.Order_Rent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Rent_Books == null)
             {
@@ -48,6 +49,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Rent_Books/Create
         public IActionResult Create()
         {
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id");
+            ViewData["id_order"] = new SelectList(_context.Order_Rent, "id", "id");
             return View();
         }
 
@@ -64,6 +67,8 @@ namespace PoolOfBooks.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Rent_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Rent, "id", "id", order_Rent_Books.id_order);
             return View(order_Rent_Books);
         }
 
@@ -80,6 +85,8 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Rent_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Rent, "id", "id", order_Rent_Books.id_order);
             return View(order_Rent_Books);
         }
 
@@ -115,6 +122,8 @@ namespace PoolOfBooks.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Rent_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Rent, "id", "id", order_Rent_Books.id_order);
             return View(order_Rent_Books);
         }
 
@@ -127,6 +136,8 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Rent_Books = await _context.Order_Rent_Books
+                .Include(o => o.Books)
+                .Include(o => o.Order_Rent)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Rent_Books == null)
             {

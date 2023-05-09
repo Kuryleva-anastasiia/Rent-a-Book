@@ -1,14 +1,12 @@
 ﻿using Azure;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
 using System.Security.Claims;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PoolOfBooksContext>(options =>
@@ -22,7 +20,17 @@ builder.Services.AddAuthentication("Cookies").AddCookie(options => options.Login
 
 builder.Services.AddAuthorization();
 
+// Add ToastNotification
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -41,6 +49,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseNotyf();
 
 app.MapControllerRoute(
 	name: "default",
@@ -66,31 +76,124 @@ app.MapGet("/Users/SignIn/{id:int}", async (string? returnUrl, HttpContext conte
 
 app.MapGet("/SignInCheckForAvatar", (string? returnUrl, HttpContext context) =>
 {
-    var user = context.User.Identity;
-    if (user != null)
+    var user = context.User;
+    if (user.Identity != null)
     {
-        if (user.IsAuthenticated)
+        if (user.Identity.IsAuthenticated)
         {
-            string id = context.User.FindFirst("ID").Value.ToString();
+            string id = user.FindFirst("ID").Value.ToString();
             if (id != null)
             {
                 return Results.Redirect(returnUrl ?? $"~/Users/Details/{id}");
             }
         }
-        else { return Results.Redirect(returnUrl ?? "~/Users/Login"); }
+        else { return Results.Redirect(returnUrl ?? "~/Users/LoginNotify"); }
     }
-    else { return Results.Redirect(returnUrl ?? "~/Users/Login"); }
-    return Results.Redirect(returnUrl ?? "~/Users/Login");
+    else { return Results.Redirect(returnUrl ?? "~/Users/LoginNotify"); }
+    return Results.Redirect(returnUrl ?? "~/Users/LoginNotify");
 });
-
 
 
 app.MapGet("/CartAdd/{clientId}/{bookId}/{status}", (string? returnUrl, HttpContext context, PoolOfBooksContext _context, int clientId, int bookId, string status) =>
 {
-    var cart = new Cart(clientId, bookId, status);
-    _context.Cart.Add(cart);
+
+    Cart с = new Cart(clientId, bookId, status);
+    _context.Cart.Add(с);
     _context.SaveChanges();
-    return Results.Redirect($"~/Carts/Details/{clientId}");
+    return Results.Redirect($"~/Carts/CartAddNotify");
 });
+
+
+app.MapGet("/CreateOrderRent", (string? returnUrl, HttpContext context, PoolOfBooksContext _context) =>
+{
+    var cart = _context.Cart.Include(x => x.Books).Include(x => x.Users).ToList();
+    int userId = Convert.ToInt32(context.User.FindFirst("ID").Value);
+    var user = _context.Users.FirstOrDefault(x => x.id == userId);
+
+    var books = cart.Where(x => x.userId == userId).Where(x => x.status == "аренда").ToList();
+    decimal sum = 0;
+    foreach (var book in books)
+    {
+        sum += Convert.ToDecimal(book.Books.price);
+    }
+    Order_Rent rent = new Order_Rent(userId, DateTime.Now, DateTime.Now.AddMonths(1), sum, user.address, "Создан");
+    _context.Order_Rent.Add(rent);
+    _context.SaveChanges();
+
+    var ro = _context.Order_Rent.OrderBy(x => x.id).Last();
+
+    foreach (var book in books)
+    {
+        Order_Rent_Books orb = new Order_Rent_Books(ro.id, book.bookId);
+        _context.Order_Rent_Books.Add(orb);
+    }
+
+    _context.SaveChanges();
+
+
+
+    _context.Cart.RemoveRange(_context.Cart.Where(x => x.userId == userId).Where(x => x.status == "аренда"));
+    _context.SaveChanges();
+
+    return Results.Redirect($"~/Users/Details/{userId}");
+});
+
+app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBooksContext _context) =>
+{
+    int userId = Convert.ToInt32(context.User.FindFirst("ID").Value);
+    var user = _context.Users.FirstOrDefault(x => x.id == userId);
+
+    var cart = _context.Cart.Include(x => x.Books).Include(x => x.Users).ToList();
+    var books = cart.Where(x => x.userId == userId).Where(x => x.status == "продажа").ToList();
+
+    decimal sum = 0;
+
+    foreach (var book in books)
+    {
+        sum += Convert.ToDecimal(book.Books.price);
+    }
+
+    try
+    {
+        Order_Buy buy = new Order_Buy(userId, DateTime.Now, sum, user.address, "Создан");
+        _context.Order_Buy.Add(buy);
+        _context.SaveChanges();
+    } catch (Exception ex) { }
+
+    try
+    {
+        var ro = _context.Order_Buy.OrderBy(x => x.id).Last();
+
+        foreach (var book in books)
+        {
+            Order_Buy_Books obb = new Order_Buy_Books(ro.id, book.bookId);
+            _context.Order_Buy_Books.Add(obb);
+        }
+
+        _context.SaveChanges();
+    }catch (Exception ex) { }
+
+    try
+    {
+        _context.Cart.RemoveRange(_context.Cart.Where(x => x.userId == userId).Where(x => x.status == "продажа"));
+        _context.SaveChanges();
+
+    }catch(Exception ex) { }
+
+    return Results.Redirect($"~/Users/Details/{userId}");
+});
+
+
+app.MapGet("/carts/Delete/{cartId}", (string? returnUrl, HttpContext context, PoolOfBooksContext _context, int cartId) =>
+{
+    int userId = Convert.ToInt32(context.User.FindFirst("ID").Value);
+    var c = _context.Cart.FirstOrDefault(x => x.id == cartId);
+    _context.Cart.Remove(c);
+    _context.SaveChanges();
+    return Results.Redirect(returnUrl ?? $"~/Carts/Notify");
+
+});
+
+
 
 app.Run();

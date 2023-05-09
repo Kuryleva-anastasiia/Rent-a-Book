@@ -22,9 +22,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Rent
         public async Task<IActionResult> Index()
         {
-              return _context.Order_Rent != null ? 
-                          View(await _context.Order_Rent.ToListAsync()) :
-                          Problem("Entity set 'PoolOfBooksContext.Order_Rent'  is null.");
+            var poolOfBooksContext = _context.Order_Rent.Include(o => o.Users).Include(o => o.RentBooks);
+            return View(await poolOfBooksContext.ToListAsync());
         }
 
         // GET: Order_Rent/Details/5
@@ -36,6 +35,7 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Rent = await _context.Order_Rent
+                .Include(o => o.Users).Include(o => o.RentBooks)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Rent == null)
             {
@@ -48,6 +48,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Rent/Create
         public IActionResult Create()
         {
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id");
+            ViewData["cart"] = new List<Cart>(_context.Cart.Where(x => x.userId == Convert.ToInt32(User.FindFirst("ID").Value)));
             return View();
         }
 
@@ -62,8 +64,9 @@ namespace PoolOfBooks.Controllers
             {
                 _context.Add(order_Rent);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Redirect($"~/Users/Details/{order_Rent.id_client}");
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
             return View(order_Rent);
         }
 
@@ -80,6 +83,7 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
             return View(order_Rent);
         }
 
@@ -115,6 +119,7 @@ namespace PoolOfBooks.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
             return View(order_Rent);
         }
 
@@ -127,6 +132,7 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Rent = await _context.Order_Rent
+                .Include(o => o.Users)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Rent == null)
             {

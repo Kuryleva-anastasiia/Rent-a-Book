@@ -11,8 +11,9 @@
         public string? first_name { get; set; }
         public string? third_name { get; set; }
         public string? address { get; set; } = "";
-        public List<Order_Rent>? Order_Rents { get; set; }
-        public List<Books>? Books { get; set; }
+        public ICollection<Cart> Carts { get; } = new List<Cart>();
+        public ICollection<Order_Rent> Order_Rent { get; } = new List<Order_Rent>();
+        public ICollection<Order_Buy> Order_Buy { get; } = new List<Order_Buy>();
     }
 
 

@@ -24,7 +24,7 @@ namespace PoolOfBooks.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Books != null ? 
-                          View(await _context.Books.ToListAsync()) :
+                          View(await _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).ToListAsync()) :
                           Problem("Entity set 'PoolOfBooksContext.Books'  is null.");
         }
 

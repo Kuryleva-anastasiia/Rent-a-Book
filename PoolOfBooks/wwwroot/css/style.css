@@ -339,7 +339,6 @@ img {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 12px 0 12px;
 }
 
 .header-wrap__img {
@@ -355,6 +354,7 @@ img {
 
 .header-wrap__nav-wrap {
 	display: flex;
+	align-items: center;
 }
 
 .header-wrap__button {
@@ -380,6 +380,7 @@ img {
 	display: flex;
 	color: #183B56;
 	padding-left: 0;
+	align-items: center;
 }
 
 .nav__item:not(:last-child) {

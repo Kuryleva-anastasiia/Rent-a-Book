@@ -1,39 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Web.Helpers;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
 
 namespace PoolOfBooks.Controllers
 {
     public class UsersController : Controller
     {
         private readonly PoolOfBooksContext _context;
-        
-        public UsersController(PoolOfBooksContext context)
+        private readonly INotyfService _toastNotification;
+        private readonly ILogger<UsersController> _logger;
+
+
+        public UsersController(PoolOfBooksContext context, INotyfService toastNotification, ILogger<UsersController> logger)
         {
             _context = context;
+            _toastNotification = toastNotification;
+            _logger = logger;
+        }
+
+        public void OnGet()
+        {
+            _toastNotification.Success("A success for christian-schou.dk");
+            _toastNotification.Information("Here is an info toast - closes in 6 seconds.", 6);
+            _toastNotification.Warning("Be aware, here is a warning toast.");
+            _toastNotification.Error("Ouch - An error occured. This message closes in 4 seconds.", 4);
+
+            // Custom Notifications
+            _toastNotification.Custom("Here is a message for you - closes in 8 seconds.", 8, "#602AC3", "fa fa-envelope-o");
+            _toastNotification.Custom("Please check the settings for your profile - closes in 6 seconds.", 6, "#0c343d", "fa fa-user");
+        }
+
+        public IActionResult LoginNotify()
+        {
+            _toastNotification.Custom("Необходимо войти в свой аккаунт!", 6, "#602AC3", "fa fa-user");
+            return RedirectToAction("Login");
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
               return _context.Users != null ? 
-                          View(await _context.Users.ToListAsync()) :
+                          View(await _context.Users.Include(x => x.Carts).Include(x => x.Order_Rent).Include(x => x.Order_Buy).ToListAsync()) :
                           Problem("Entity set 'PoolOfBooksContext.Users'  is null.");
         }
 
@@ -46,8 +60,11 @@ namespace PoolOfBooks.Controllers
                 return NotFound();
             }
 
-            var users = await _context.Users
+            var users = await _context.Users.Include(x => x.Order_Rent).Include(x => x.Order_Buy)
                 .FirstOrDefaultAsync(m => m.id == id);
+            ViewData["CartCount"] = _context.Cart.Where(x => x.userId == id).Count();
+
+
             if (users == null)
             {
                 return NotFound();
@@ -91,14 +108,18 @@ namespace PoolOfBooks.Controllers
 
                         _context.Add(users);
                         await _context.SaveChangesAsync();
+                        _toastNotification.Success("Вы успешно зарегистрированы!");
                         return Redirect($"~/Users/SignIn/{users.id}");
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(ex.ToString());
+                        _toastNotification.Error("Ошибка регистрации!\n" + ex.Message);
                     }
                 }
-                else { ModelState.AddModelError(string.Empty, "Введите логин и пароль!"); }
+                else {
+                    _toastNotification.Error("Логин и пароль обязательны для заполнения!");
+
+                }
             }
             return View(users);
         }
@@ -119,27 +140,34 @@ namespace PoolOfBooks.Controllers
                 if (model.login != null && model.password != null)
                 {
 
-                    
+
                     var p = Crypto.Hash(model.password, "SHA-256");
-                        
+
 
                     var user = _context.Users.FirstOrDefaultAsync(u => u.login == model.login && u.password == p);
 
                     if (user.Result != null && user.Result.role != null)
                     {
-                         
+
                         int id = Convert.ToInt32(user.Result.id);
 
                         model.id = id;
-
+                        _toastNotification.Success("Вы успешно вошли в аккаунт!");
                         return Redirect($"~/Users/SignIn/{id}");
                     }
                     else
                     {
-                        Results.NotFound(new { message = "Пользователь не найден" });
+                    _toastNotification.Error("Аккаунт не найден!");
                         return View(model);
                     }
                 }
+                else
+                {
+                    _toastNotification.Error("Введите логин и пароль!");
+                }
+            }
+            else { 
+                    _toastNotification.Error("Введены некорректные данные!");
             }
             return View();
         }
