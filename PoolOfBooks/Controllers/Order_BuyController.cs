@@ -22,9 +22,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Buy
         public async Task<IActionResult> Index()
         {
-              return _context.Order_Buy != null ? 
-                          View(await _context.Order_Buy.ToListAsync()) :
-                          Problem("Entity set 'PoolOfBooksContext.Order_Buy'  is null.");
+            var poolOfBooksContext = _context.Order_Buy.Include(o => o.Users);
+            return View(await poolOfBooksContext.ToListAsync());
         }
 
         // GET: Order_Buy/Details/5
@@ -36,6 +35,7 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Buy = await _context.Order_Buy
+                .Include(o => o.Users)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Buy == null)
             {
@@ -48,6 +48,7 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Buy/Create
         public IActionResult Create()
         {
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id");
             return View();
         }
 
@@ -56,7 +57,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,id_client,date,sum,address")] Order_Buy order_Buy)
+        public async Task<IActionResult> Create([Bind("id,id_client,date,sum,address,status")] Order_Buy order_Buy)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +65,7 @@ namespace PoolOfBooks.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
             return View(order_Buy);
         }
 
@@ -80,6 +82,7 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
             return View(order_Buy);
         }
 
@@ -88,7 +91,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,id_client,date,sum,address")] Order_Buy order_Buy)
+        public async Task<IActionResult> Edit(int id, [Bind("id,id_client,date,sum,address,status")] Order_Buy order_Buy)
         {
             if (id != order_Buy.id)
             {
@@ -115,6 +118,7 @@ namespace PoolOfBooks.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
             return View(order_Buy);
         }
 
@@ -127,6 +131,7 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Buy = await _context.Order_Buy
+                .Include(o => o.Users)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Buy == null)
             {

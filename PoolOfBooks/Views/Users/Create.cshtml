@@ -2,12 +2,12 @@
 
 @{
     ViewData["Title"] = "Create";
+    string a = "@";
 }
+<section class="login container">
 
-<h1>Create</h1>
+<h1 class="form-title">Регистрация</h1>
 
-<h4>Users</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -15,18 +15,21 @@
             <div class="form-group">
                 <label asp-for="login" class="control-label"></label>
                 <input asp-for="login" class="form-control" />
-                <span asp-validation-for="login" class="text-danger"></span>
+                    <span asp-validation-for="login" class="text-danger" type="email"
+                          pattern="/^([a-z0-9_\.-])+@a+[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i"
+                          required></span>
             </div>
             <div class="form-group">
                 <label asp-for="password" class="control-label"></label>
-                <input asp-for="password" class="form-control" />
-                <span asp-validation-for="password" class="text-danger"></span>
+                    <input asp-for="password" class="form-control" type="password" required />
+                <span asp-validation-for="password" class="text-danger" ></span>
             </div>
-            <div class="form-group">
-                <label asp-for="role" class="control-label"></label>
-                <input asp-for="role" class="form-control" />
-                <span asp-validation-for="role" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="phone" class="control-label"></label>
+                    <input asp-for="phone" class="form-control" type="tel"
+                           placeholder="+7xxxxxxxxxx" minlength="12" maxlength="12" value="+7" required />
+                    <span asp-validation-for="phone" class="text-danger">Пример: +79998887766</span>
+                </div>
             <div class="form-group">
                 <label asp-for="last_name" class="control-label"></label>
                 <input asp-for="last_name" class="form-control" />
@@ -37,27 +40,39 @@
                 <input asp-for="first_name" class="form-control" />
                 <span asp-validation-for="first_name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="third_name" class="control-label"></label>
-                <input asp-for="third_name" class="form-control" />
-                <span asp-validation-for="third_name" class="text-danger"></span>
-            </div>
+                <div class="form-group">
+                    <label asp-for="third_name" class="control-label"></label>
+                    <input asp-for="third_name" class="form-control" />
+                    <span asp-validation-for="third_name" class="text-danger"></span>
+                </div>
             <div class="form-group">
                 <label asp-for="address" class="control-label"></label>
                 <input asp-for="address" class="form-control" />
                 <span asp-validation-for="address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Зарегистрироваться" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
+        @if (User.IsInRole("admin"))
+        {
+            <a class="form-link" asp-action="Login">Вход</a>
+            <a class="form-link" asp-action="Index">Список пользователей</a>
+
+        }
+        else
+        {
+            <a asp-action="Login">Вход</a>
+        }
+    </div>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

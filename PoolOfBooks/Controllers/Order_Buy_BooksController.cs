@@ -22,21 +22,22 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Buy_Books
         public async Task<IActionResult> Index()
         {
-              return _context.Order_Buy_Books != null ? 
-                          View(await _context.Order_Buy_Books.ToListAsync()) :
-                          Problem("Entity set 'PoolOfBooksContext.Order_Buy_Books'  is null.");
+            var poolOfBooksContext = _context.Order_Buy_Books.Include(o => o.Books).Include(o => o.Order_Buy);
+            return View(await poolOfBooksContext.ToListAsync());
         }
 
         // GET: Order_Buy_Books/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.Order_Buy_Books == null)
             {
                 return NotFound();
             }
 
-            var order_Buy_Books = await _context.Order_Buy_Books
-                .FirstOrDefaultAsync(m => m.id == id);
+            var order_Buy_Books = _context.Order_Buy_Books
+                .Include(o => o.Books)
+                .Include(o => o.Order_Buy)
+                .Where(m => m.id_order == id);
             if (order_Buy_Books == null)
             {
                 return NotFound();
@@ -48,6 +49,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Buy_Books/Create
         public IActionResult Create()
         {
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id");
+            ViewData["id_order"] = new SelectList(_context.Order_Buy, "id", "id");
             return View();
         }
 
@@ -64,6 +67,8 @@ namespace PoolOfBooks.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Buy_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Buy, "id", "id", order_Buy_Books.id_order);
             return View(order_Buy_Books);
         }
 
@@ -80,6 +85,8 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Buy_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Buy, "id", "id", order_Buy_Books.id_order);
             return View(order_Buy_Books);
         }
 
@@ -115,6 +122,8 @@ namespace PoolOfBooks.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["id_book"] = new SelectList(_context.Books, "id", "id", order_Buy_Books.id_book);
+            ViewData["id_order"] = new SelectList(_context.Order_Buy, "id", "id", order_Buy_Books.id_order);
             return View(order_Buy_Books);
         }
 
@@ -127,6 +136,8 @@ namespace PoolOfBooks.Controllers
             }
 
             var order_Buy_Books = await _context.Order_Buy_Books
+                .Include(o => o.Books)
+                .Include(o => o.Order_Buy)
                 .FirstOrDefaultAsync(m => m.id == id);
             if (order_Buy_Books == null)
             {

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    HttpContext context;
+}
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
@@ -26,26 +30,36 @@
     <header class="header">
         <div class="container">
             <div class="header-wrap">
-                <a href="#" class="logo header-wrap__logo">
+                <a href="~/Home/Index" class="logo header-wrap__logo">
                     <img src="~/img/logo.png"
-                         alt="Логотип: ehya"
+                         alt="Логотип: Pool of Books"
                          class="header-wrap__img" />
                 </a>
                 <div class="header-wrap__nav-wrap">
                     <ul class="nav header-wrap__nav">
+                       @* <li class="nav__item">
+                            <a href="~/Home/Index#sale" class="nav__link">Распродажа</a>
+                        </li>*@
                         <li class="nav__item">
-                            <a href="#recs" class="nav__link">Рекомендации</a>
+                            <a href="~/Books/Index" class="nav__link">Каталог</a>
                         </li>
-                        <li class="nav__item">
-                            <a href="#books" class="nav__link">Книги</a>
-                        </li>
-                        <li class="nav__item">
-                            <a href="#blog" class="nav__link">Блог</a>
-                        </li>
+                        @if(User.Identity.IsAuthenticated){
+                            <li class="nav__item">
+                                <a href="~/Carts/Details/@(User.FindFirst("ID").Value)" class="nav__link">Корзина</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav__item">
+                                <a href="~/Users/LoginNotify" class="nav__link">Корзина</a>
+                            </li>
+                        }
+
                     </ul>
-                    <button data-toggle="modal" class="button header-wrap__button">
-                        Получить
-                    </button>
+                    
+                        <a action="get" href="~/SignInCheckForAvatar">
+                            <img src="~/img/user.png" alt="Avatar" class="header-wrap__avatar">
+                        </a>
                 </div>
                 <!-- /.header-wrap__nav-wrap -->
                 <button class="menu-btn header-wrap__menu-btn">
@@ -163,13 +177,16 @@
         </div>
         <!-- /.container -->
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script src="~/js/jquery.mask.min.js"></script>
     <script src="~/js/swiper-bundle.min.js"></script>
     <script src="~/js/jquery.fancybox.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/main.js"></script>
-    @*@await RenderSectionAsync("Scripts", required: false)*@
+    @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
 </body>
 </html>
