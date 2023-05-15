@@ -50,7 +50,7 @@ try {
     $mail->Password   = '7irHfRY5z1ro393yQehh'; // Пароль на почте
     $mail->SMTPSecure = 'ssl';
     $mail->Port       = 465;
-    $mail->setFrom('knastya76r@mail.ru', 'Bookstore Ehya'); // Адрес самой почты и имя отправителя
+    $mail->setFrom('knastya76r@mail.ru', 'Pool of Books'); // Адрес самой почты и имя отправителя
 
     // Получатель письма
     $mail->addAddress('knastya76@yandex.ru');
@@ -61,7 +61,7 @@ $mail->isHTML(true);
 if(isset($_POST['subscribe-btn'])){
     $mail->Subject = $email_title;
     $mail->Body = $email_body; 
-    header('Location: subscribe.html');
+    header('Location: ~/Shared/subscribe.html');
 }
 // if(isset($_POST['contact_button'])) {
 //     $mail->Subject = $title;

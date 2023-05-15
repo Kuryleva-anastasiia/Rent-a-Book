@@ -25,7 +25,7 @@ builder.Services.AddNotyf(config =>
 {
     config.DurationInSeconds = 5;
     config.IsDismissable = true;
-    config.Position = NotyfPosition.BottomRight;
+    config.Position = NotyfPosition.TopCenter;
 });
 
 var app = builder.Build();
@@ -84,13 +84,13 @@ app.MapGet("/SignInCheckForAvatar", (string? returnUrl, HttpContext context) =>
             string id = user.FindFirst("ID").Value.ToString();
             if (id != null)
             {
-                return Results.Redirect(returnUrl ?? $"~/Users/Details/{id}");
+                return Results.Redirect($"~/Users/Details/{id}");
             }
         }
-        else { return Results.Redirect(returnUrl ?? "~/Users/LoginNotify"); }
+        else { return Results.Redirect("~/Users/LoginNotify"); }
     }
-    else { return Results.Redirect(returnUrl ?? "~/Users/LoginNotify"); }
-    return Results.Redirect(returnUrl ?? "~/Users/LoginNotify");
+    else { return Results.Redirect("~/Users/LoginNotify"); }
+    return Results.Redirect("~/Users/LoginNotify");
 });
 
 
@@ -106,7 +106,7 @@ app.MapGet("/CartAdd/{clientId}/{bookId}/{status}", (string? returnUrl, HttpCont
 
 app.MapGet("/CreateOrderRent", (string? returnUrl, HttpContext context, PoolOfBooksContext _context) =>
 {
-    var cart = _context.Cart.Include(x => x.Books).Include(x => x.Users).ToList();
+    var cart = _context.Cart.Include(x => x.Books).ToList();
     int userId = Convert.ToInt32(context.User.FindFirst("ID").Value);
     var user = _context.Users.FirstOrDefault(x => x.id == userId);
 
@@ -114,9 +114,20 @@ app.MapGet("/CreateOrderRent", (string? returnUrl, HttpContext context, PoolOfBo
     decimal sum = 0;
     foreach (var book in books)
     {
+        var b = _context.Books.FirstOrDefault(x => x.id == book.bookId);
+
+        if (b.in_stock < 1) {
+            return Results.Redirect($"~/Carts/OrderNotifyError");
+        }
+
+        b.count_was_read++;
+        b.in_stock--;
+        _context.Update(b);
+        _context.SaveChanges();
+
         sum += Convert.ToDecimal(book.Books.price);
     }
-    Order_Rent rent = new Order_Rent(userId, DateTime.Now, DateTime.Now.AddMonths(1), sum, user.address, "Создан");
+    Order_Rent rent = new Order_Rent(userId, DateTime.Now.Date, DateTime.Now.Date.AddMonths(1), sum, user.address, "Создан");
     _context.Order_Rent.Add(rent);
     _context.SaveChanges();
 
@@ -135,7 +146,7 @@ app.MapGet("/CreateOrderRent", (string? returnUrl, HttpContext context, PoolOfBo
     _context.Cart.RemoveRange(_context.Cart.Where(x => x.userId == userId).Where(x => x.status == "аренда"));
     _context.SaveChanges();
 
-    return Results.Redirect($"~/Users/Details/{userId}");
+    return Results.Redirect($"~/Carts/OrderNotify");
 });
 
 app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBooksContext _context) =>
@@ -143,7 +154,7 @@ app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBoo
     int userId = Convert.ToInt32(context.User.FindFirst("ID").Value);
     var user = _context.Users.FirstOrDefault(x => x.id == userId);
 
-    var cart = _context.Cart.Include(x => x.Books).Include(x => x.Users).ToList();
+    var cart = _context.Cart.Include(x => x.Books).ToList();
     var books = cart.Where(x => x.userId == userId).Where(x => x.status == "продажа").ToList();
 
     decimal sum = 0;
@@ -155,7 +166,7 @@ app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBoo
 
     try
     {
-        Order_Buy buy = new Order_Buy(userId, DateTime.Now, sum, user.address, "Создан");
+        Order_Buy buy = new Order_Buy(userId, DateTime.Now.Date, sum, user.address, "Создан");
         _context.Order_Buy.Add(buy);
         _context.SaveChanges();
     } catch (Exception ex) { }
@@ -166,6 +177,17 @@ app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBoo
 
         foreach (var book in books)
         {
+            var b = _context.Books.FirstOrDefault(x => x.id == book.bookId);
+
+            if (b.in_stock < 1)
+            {
+                return Results.Redirect($"~/Carts/OrderNotifyError");
+            }
+
+            b.in_stock--;
+            _context.Update(b);
+            _context.SaveChanges();
+
             Order_Buy_Books obb = new Order_Buy_Books(ro.id, book.bookId);
             _context.Order_Buy_Books.Add(obb);
         }
@@ -180,7 +202,7 @@ app.MapGet("/CreateOrderBuy", (string? returnUrl, HttpContext context, PoolOfBoo
 
     }catch(Exception ex) { }
 
-    return Results.Redirect($"~/Users/Details/{userId}");
+    return Results.Redirect($"~/Carts/OrderNotify");
 });
 
 

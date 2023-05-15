@@ -37,15 +37,24 @@
                 </a>
                 <div class="header-wrap__nav-wrap">
                     <ul class="nav header-wrap__nav">
-                        <li class="nav__item">
-                            <a href="#recs" class="nav__link">Распродажа</a>
-                        </li>
+                       @* <li class="nav__item">
+                            <a href="~/Home/Index#sale" class="nav__link">Распродажа</a>
+                        </li>*@
                         <li class="nav__item">
                             <a href="~/Books/Index" class="nav__link">Каталог</a>
                         </li>
-                        <li class="nav__item">
-                            <a href="#" class="nav__link">Отзывы</a>
-                        </li>
+                        @if(User.Identity.IsAuthenticated){
+                            <li class="nav__item">
+                                <a href="~/Carts/Details/@(User.FindFirst("ID").Value)" class="nav__link">Корзина</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav__item">
+                                <a href="~/Users/LoginNotify" class="nav__link">Корзина</a>
+                            </li>
+                        }
+
                     </ul>
                     
                         <a action="get" href="~/SignInCheckForAvatar">

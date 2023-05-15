@@ -3,57 +3,76 @@
 @{
     var id = User.FindFirst("ID").Value;
     var count = ViewData["CartCount"];
+    string a = "@";
 }
+
+<section class="login container">
+
+
+
 @if (User.IsInRole("client"))
 {
-    <h1 style="margin-top: 80px;">Details</h1>
-<a href="~/Carts/Details/@(id)"><h4>Корзина (@count)</h4></a>
+    <h1 class="form-title">Личный кабинет</h1>
+<a href="~/Carts/Details/@(id)" class="cart-string">Корзина (@count)</a>
 
-    
-<hr />
 <div>
-    <h4>Users</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.login)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.login)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.last_name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.last_name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.first_name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.first_name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.third_name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.third_name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.address)
-        </dd>
-    </dl>
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="id" />
+                <div class="form-group">
+                    <label asp-for="login" class="control-label"></label>
+                    <input asp-for="login" class="form-control" type="email" value="@(Model.login)" pattern="/^([a-z0-9_\.-])+@a+[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i"
+                      required />
+                    <span asp-validation-for="login" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="password" class="control-label" style="display: none;"></label>
+                    <input asp-for="password" type="hidden" value="@(Model.password)" class="form-control" />
+                    <span asp-validation-for="password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="role" style="display: none;" class="control-label"></label>
+                    <input asp-for="role" type="hidden" class="form-control" />
+                    <span asp-validation-for="role" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="phone" class="control-label"></label>
+                    <input asp-for="phone" class="form-control" type="tel" value="@(Model.phone)" placeholder="+7xxxxxxxxxx" minlength="12" maxlength="12" required />
+                    <span asp-validation-for="phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="last_name" class="control-label"></label>
+                    <input asp-for="last_name" class="form-control" value="@(Model.last_name)" />
+                    <span asp-validation-for="last_name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="first_name" class="control-label"></label>
+                    <input asp-for="first_name" class="form-control" value="@(Model.first_name)" />
+                    <span asp-validation-for="first_name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="third_name" class="control-label"></label>
+                    <input asp-for="third_name" class="form-control" value="@(Model.third_name)" />
+                    <span asp-validation-for="third_name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="address" class="control-label"></label>
+                    <input asp-for="address" class="form-control" value="@(Model.address)" />
+                    <span asp-validation-for="address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <a href="~/UpdateUser"><input type="submit" value="Сохранить" class="btn btn-primary" /></a>
+                </div>
+            </form>
+
 </div>
 <hr />
-    <h4>Заказы (Аренда)</h4>
+        <h4 class="form-title">Заказы (Аренда)</h4>
 
     if (Model.Order_Rent != null)
     {
         var orders = Model.Order_Rent.Where(x => x.id_client == Convert.ToInt32(id));
-
+        
 
         @if (orders.Count() != 0)
         {
@@ -74,6 +93,8 @@
                         </th>
                         <th>
                             <strong>Статус</strong>
+                        </th>
+                        <th>
                         </th>
                     </tr>
                 </thead>
@@ -96,7 +117,9 @@
                             <td>
                                 @c.status
                             </td>
-
+                            <td>
+                                    <a href="~/Order_Rent_Books/Details/@c.id">Книги</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -111,7 +134,7 @@
 
 
 <hr />
-    <h4>Заказы (Покупка)</h4>
+        <h4 class="form-title">Заказы (Покупка)</h4>
     if (Model.Order_Buy != null)
     {
         var buys = Model.Order_Buy.Where(x => x.id_client == Convert.ToInt32(id));
@@ -133,6 +156,9 @@
                         <th>
                             <strong>Статус</strong>
                         </th>
+                        <th>
+                            
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,7 +177,9 @@
                             <td>
                                 @c.status
                             </td>
-
+                            <td>
+                                <a href="~/Order_Buy_Books/details/@c.id">Книги</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -180,4 +208,4 @@ else
     </div>
     
 }
-
+</section>

@@ -25,23 +25,22 @@ namespace PoolOfBooks.Controllers
             _logger = logger;
         }
 
-        public void OnGet()
-        {
-            _toastNotification.Success("A success for christian-schou.dk");
-            _toastNotification.Information("Here is an info toast - closes in 6 seconds.", 6);
-            _toastNotification.Warning("Be aware, here is a warning toast.");
-            _toastNotification.Error("Ouch - An error occured. This message closes in 4 seconds.", 4);
-
-            // Custom Notifications
-            _toastNotification.Custom("Here is a message for you - closes in 8 seconds.", 8, "#602AC3", "fa fa-envelope-o");
-            _toastNotification.Custom("Please check the settings for your profile - closes in 6 seconds.", 6, "#0c343d", "fa fa-user");
-        }
 
         public IActionResult LoginNotify()
         {
             _toastNotification.Custom("Необходимо войти в свой аккаунт!", 6, "#602AC3", "fa fa-user");
             return RedirectToAction("Login");
         }
+        public IActionResult OrderNotify()
+        {
+            var id = User.FindFirst("ID").Value;
+
+            _toastNotification.Success("Заказ создан!\nМенеджер свяжется с Вами для подтверждения заказа", 10);
+
+            return RedirectToAction("Details", new { id });
+        }
+
+        
 
         // GET: Users
         public async Task<IActionResult> Index()
@@ -85,21 +84,12 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,login,password,role,last_name,first_name,third_name,address")] Users users)
+        public async Task<IActionResult> Create([Bind("id,login,password,role,phone,last_name,first_name,third_name,address")] Users users)
         {
             if (ModelState.IsValid)
             {
                 if (users.login != null && users.password != null)
                 {
-                    //Использование хранимой процедуры
-                    var log = new Microsoft.Data.SqlClient.SqlParameter("@login", users.login);
-                    var pass = new Microsoft.Data.SqlClient.SqlParameter("@password", users.password);
-                    var role = new Microsoft.Data.SqlClient.SqlParameter("@role", "client");
-                    var l_name = new Microsoft.Data.SqlClient.SqlParameter("@last_name", users.last_name);
-                    var f_name = new Microsoft.Data.SqlClient.SqlParameter("@first_name", users.first_name);
-                    var th_name = new Microsoft.Data.SqlClient.SqlParameter("@third_name", users.third_name);
-                    var address = new Microsoft.Data.SqlClient.SqlParameter("@address", users.address);
-
 
                     try
                     {
@@ -193,7 +183,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,login,password,role,last_name,first_name,third_name,address")] Users users)
+        public async Task<IActionResult> Edit(int id, [Bind("id,login,password,role,phone,last_name,first_name,third_name,address")] Users users)
         {
             if (id != users.id)
             {
@@ -218,9 +208,9 @@ namespace PoolOfBooks.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect($"~/Users/Details/{users.id}");
             }
-            return View(users);
+            return Redirect($"~/Users/Details/{users.id}");
         }
 
         // GET: Users/Delete/5

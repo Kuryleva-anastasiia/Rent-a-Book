@@ -18,32 +18,42 @@
             </div>
             <!-- /.products-card__wrap-img -->
             <div class="products-card__content">
-                <h4 class="catalog__title products-card__title">
-                    @Html.DisplayFor(modelItem => item.name)
-                </h4>
+                    <h4 class="catalog__title products-card__title">
+                        @Html.DisplayFor(modelItem => item.name)
+                    </h4>
                 <span class="catalog__author products-card__collection">@Html.DisplayFor(modelItem => item.author)</span>
                 <span class="catalog__price products-card__price">@Html.DisplayFor(modelItem => item.price) &#8381;</span>
                 <div class="products-card__wrap-btn">
+                    @{string btnStr = "";}
+                    @if (item.status == "аренда")
+                    {
+                        btnStr = "Хочу прочитать";
+                    }
+                    else
+                    {
+                        btnStr = "Купить";
+                    }
                     @if (User.Identity != null)
                     {
                         @if (User.Identity.IsAuthenticated == true)
                         {
                             <a href="~/CartAdd/@(User.FindFirst("ID").Value.ToString())/@(item.id)/@(item.status)">
-                                <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                               
+                                    <button class="button catalog__btn products-card__btn">@btnStr</button>
                             </a>
 
                         }
                         else
                         {
                             <a href="~/SignInCheckForAvatar">
-                            <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                                    <button class="button catalog__btn products-card__btn">@btnStr</button>
                             </a>
                         }
                     }
                     else
                     {
                         <a href="~/SignInCheckForAvatar">
-                            <button class="button catalog__btn products-card__btn">Хочу прочитать</button>
+                                <button class="button catalog__btn products-card__btn">@btnStr</button>
                         </a>
                     }
                     

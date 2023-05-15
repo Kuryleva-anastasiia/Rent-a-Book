@@ -27,17 +27,17 @@ namespace PoolOfBooks.Controllers
         }
 
         // GET: Order_Buy_Books/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.Order_Buy_Books == null)
             {
                 return NotFound();
             }
 
-            var order_Buy_Books = await _context.Order_Buy_Books
+            var order_Buy_Books = _context.Order_Buy_Books
                 .Include(o => o.Books)
                 .Include(o => o.Order_Buy)
-                .FirstOrDefaultAsync(m => m.id == id);
+                .Where(m => m.id_order == id);
             if (order_Buy_Books == null)
             {
                 return NotFound();

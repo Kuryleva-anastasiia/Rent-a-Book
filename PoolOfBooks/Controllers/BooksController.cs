@@ -24,7 +24,7 @@ namespace PoolOfBooks.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Books != null ? 
-                          View(await _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).ToListAsync()) :
+                          View(await _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).Include(o => o.Category).ToListAsync()) :
                           Problem("Entity set 'PoolOfBooksContext.Books'  is null.");
         }
 
@@ -57,7 +57,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,name,author,cycle,description,id_category,cover,in_stock,price,status,count_was_read")] Books books)
+        public async Task<IActionResult> Create([Bind("id,name,author,cycle,description,id_category,cover,pages,in_stock,price,status,count_was_read")] Books books)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace PoolOfBooks.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,name,author,cycle,description,id_category,cover,in_stock,price,status,count_was_read")] Books books)
+        public async Task<IActionResult> Edit(int id, [Bind("id,name,author,cycle,description,id_category,cover,pages,in_stock,price,status,count_was_read")] Books books)
         {
             if (id != books.id)
             {

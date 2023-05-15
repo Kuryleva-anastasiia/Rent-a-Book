@@ -35,6 +35,21 @@ namespace PoolOfBooks.Controllers
             return Redirect($"~/Books/index#{cart.bookId}");
         }
 
+        public IActionResult OrderNotifyError()
+        {
+            var id = User.FindFirst("ID").Value;
+            _toastNotification.Error("Удалите из корзины книги, которые закончились!", 15);
+            return RedirectToAction("Details", new { id });
+        }
+
+        public IActionResult OrderNotify()
+        {
+            var id = User.FindFirst("ID").Value;
+
+            _toastNotification.Success("Заказ создан! Менеджер свяжется с Вами для подтверждения заказа", 15);
+
+            return Redirect($"~/Users/Details/{id}");
+        }
 
         // GET: Carts
         public async Task<IActionResult> Index()

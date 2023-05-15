@@ -326,6 +326,10 @@ img {
 	max-width: 100%;
 }
 
+hr {
+	color: #183b56;
+}
+
 .header {
 	position: fixed;
 	left: 0;
@@ -407,7 +411,7 @@ img {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 169px 0 100px;
+	padding: 80px 0 100px;
 }
 
 .main-content {
@@ -1527,6 +1531,12 @@ img {
 	padding: 8px 11px;
 	margin-bottom: 35px;
 }
+
+
+.catalog-card__a {
+	text-decoration: none;
+	display: contents;
+}
 	
 .catalog-card__wrap-img{
 	height: 238px;
@@ -1535,6 +1545,179 @@ img {
 	overflow: hidden;
 	margin-right: 20px;
 }
+
+
+
+.login {
+	padding-top: 110px;
+	padding-bottom: 110px;
+}
+
+.form-title {
+	color: #183B56;
+	margin-bottom: 30px;
+}
+
+.form-group {
+	margin-bottom: 15px
+}
+
+.form-control {
+	border-radius: 8px;
+	width: 230px;
+	height: 43px;
+	padding: 0 14px;
+	font-size: 12px;
+	line-height: 15px;
+	border-color: #183B56;
+}
+
+.control-label {
+	font-weight: bold;
+	font-size: 15px;
+	line-height: 15px;
+	margin-right: 24px;
+}
+
+.btn-primary {
+	font-family: "Open Sans", sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 22px;
+	color: #ffffff;
+	border-radius: 2000px;
+	background-color: #183B56;
+	padding: 7px 20px;
+	border: none;
+}
+
+.form-link {
+	font-size: 16px;
+	line-height: 15px;
+	margin-right: 24px;
+	color: #183b56;
+	margin-top: 15px;
+	display: inline-block;
+}
+
+.cart-string {
+	font-size: 18px;
+	margin-right: 24px;
+	color: #183b56;
+	margin-top: 15px;
+	margin-bottom: 30px;
+	display: inline-block;
+}
+
+/*  users/detsils  */
+
+
+.table {
+	border-collapse: collapse;
+	margin-bottom: 30px;
+}
+
+	.table td, .table th {
+		border: 1px solid #ddd;
+		padding: 8px;
+	}
+
+.table tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.table tr:hover {
+	background-color: #ddd;
+}
+
+.table th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #183b56;
+	color: white;
+}
+
+.table td a {
+	cursor: pointer; 
+	color: #183b56;
+	text-align: center;
+}
+
+/*  carts/detsils  */
+
+.cart-card__content {
+	width: 48%;
+}
+
+.cart__btn {
+	margin-bottom: 20px;
+}
+
+.cart {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+/*  Books/detsils  */
+
+.book {
+	display: flex;
+	flex-direction:row;
+
+}
+
+.book__price {
+	color: #FAAD13;
+	font-size: 28px;
+	margin-bottom: 16px;
+	display: inline-block;
+	margin-top: 16px;
+}
+
+.book__feature {
+	margin-right: 20px;
+}
+
+
+.book__wrap-img {
+	height: 500px;
+	max-width: 350px;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-right: 60px;
+}
+
+.book__wrap-content {
+	display: flex;
+	flex-direction: column;
+	color: #183B56;
+}
+
+.book__btn {
+	font-family: "Open Sans", sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	background-color: #183b56;
+	color: #fafafa;
+	border-radius: 2000px;
+	margin-top: 16px;
+	padding: 10px 25px;
+}
+
+.book__description-wrap {
+	background-color: #ffd89582;
+	margin-top: 50px;
+	padding: 40px;
+}
+
+.book__description {
+	min-height: 100px;
+}
+
+
 
 @media (max-width: 1200px) {
 	.container {
@@ -1861,6 +2044,16 @@ img {
 	.modal__button:hover {
 		color: #FAAD13;
 		background-color: #ffffff;
+	}
+
+	.btn-primary:hover {
+		box-shadow: 0 7px 14px rgba(0, 0, 0, 0.4);
+		transition: 300ms;
+	}
+
+	.book__btn:hover {
+		box-shadow: 0 7px 14px rgba(0, 0, 0, 0.4);
+		transition: 300ms;
 	}
 }
 
