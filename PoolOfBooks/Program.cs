@@ -15,11 +15,6 @@ builder.Services.AddDbContext<PoolOfBooksContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Подключаю куки
-builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/Users/Login");
-
-builder.Services.AddAuthorization();
-
 // Add ToastNotification
 builder.Services.AddNotyf(config =>
 {
@@ -27,6 +22,11 @@ builder.Services.AddNotyf(config =>
     config.IsDismissable = true;
     config.Position = NotyfPosition.TopCenter;
 });
+
+// Подключаю куки
+builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/Users/Login");
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -40,7 +40,7 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
-
+app.UseNotyf();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -50,7 +50,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseNotyf();
+
 
 app.MapControllerRoute(
 	name: "default",

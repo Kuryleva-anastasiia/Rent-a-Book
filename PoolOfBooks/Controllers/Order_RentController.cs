@@ -48,7 +48,8 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Rent/Create
         public IActionResult Create()
         {
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id");
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "login");
+            ViewData["status"] = new SelectList(new List<string> { "Создан" }, "Создан");
             ViewData["cart"] = new List<Cart>(_context.Cart.Where(x => x.userId == Convert.ToInt32(User.FindFirst("ID").Value)));
             return View();
         }
@@ -60,14 +61,9 @@ namespace PoolOfBooks.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("id,id_client,date_begin,date_end,sum,address,status")] Order_Rent order_Rent)
         {
-            if (ModelState.IsValid)
-            {
                 _context.Add(order_Rent);
                 await _context.SaveChangesAsync();
                 return Redirect($"~/Users/Details/{order_Rent.id_client}");
-            }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
-            return View(order_Rent);
         }
 
         // GET: Order_Rent/Edit/5
@@ -83,7 +79,10 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "last_name" ,order_Rent.id_client);
+
+            ViewData["status"] = new SelectList(new List<string> { "Создан", "Собран", "Доставлен", "Получен", "В аренде", "Выполнен", "Продлен" }, order_Rent.status);
+
             return View(order_Rent);
         }
 

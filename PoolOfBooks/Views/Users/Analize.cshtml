@@ -1,0 +1,81 @@
+﻿@model IEnumerable<PoolOfBooks.Models.Order_Buy_Books>
+
+@{
+    ViewData["Title"] = "Analize";
+    decimal sum = 0;
+}
+
+<section class="login container">
+
+    <h1 class="form-title">Отчет по продажам за текущий месяц</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Order_Buy.date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.id_book)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Books.sellPrice)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Order_Buy.date.ToShortDateString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.id_book)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Books.name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Books.author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Books.sellPrice)
+                    </td>
+                </tr>
+                
+                    sum += item.Books.sellPrice.Value;
+                
+            }
+            <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                    Итог: @sum
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form asp-action="Analize" method="post">
+        <input name="start" class="form-control" type="date" required />
+        <input name="end" class="form-control" type="date" required />
+        <input name="file" placeholder="Название файла" class="form-control" maxlength="20" min="1" required/>
+        <input type="submit" value="Сформировать отчет" class="btn admin__btn" style="margin-top: 20px; max-width: 300px;"/>
+    </form>
+</section>
+
+
+

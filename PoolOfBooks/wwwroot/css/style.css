@@ -561,7 +561,7 @@ hr {
 
 .products-card__wrap-img {
 	height: 238px;
-	min-width: 160px;
+	min-width: 150px;
 	border-radius: 8px;
 	overflow: hidden;
 	margin-right: 20px;
@@ -650,8 +650,8 @@ hr {
 
 .month-top-card__wrap-img {
 	border-radius: 6px;
-	height: 177px;
-	min-width: 119px;
+	max-height: 174px;
+	max-width: 119px;
 	overflow: hidden;
 	margin-right: 27px;
 }
@@ -1519,7 +1519,7 @@ hr {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	margin-top: 140px;
+	margin-top: 55px;
 }
 
 .catalog__card {
@@ -1717,10 +1717,61 @@ hr {
 	min-height: 100px;
 }
 
+.admin__menu {
+	list-style: none;
+	
+}
+
+.admin__menu_first {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
+.admin__btn {
+	display: block;
+	font-family: "Roboto Condensed", sans-serif;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 20px;
+	text-align: center;
+	letter-spacing: 0.2px;
+	padding: 11px 18px;
+	max-width: 179px;
+	border: 2px solid #1565D8;
+	border-radius: 22px;
+	color: #1565D8;
+	text-decoration: none;
+	margin-bottom: 20px;
+}
+
+.sort-list {
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	padding-left: 0;
+}
+
+	.sort-list:first-child {
+		font-style: bold;
+	}
 
 
-@media (max-width: 1200px) {
-	.container {
+	.sort-list__item {
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 16px;
+		line-height: 22px;
+		color: #183b56;
+	}
+
+
+
+	@media (max-width: 1200px) {
+		.container {
 		max-width: 960px;
 	}
 
@@ -1921,6 +1972,19 @@ hr {
 		width: 100%;
 	}
 
+	.sort-list__item::after {
+		content: "";
+		display: block;
+		height: 2px;
+		width: 0%;
+		background-color: #183B56;
+		transition: width 0.3s ease-in-out;
+	}
+
+	.sort-list__item:hover:after {
+		width: 100%;
+	}
+
 	.main-content__btn_transparent:hover {
 		background-color: #1565D8;
 		color: #ffffff;
@@ -1984,6 +2048,12 @@ hr {
 	}
 
 	.blog__btn:hover {
+		background-color: #1565D8;
+		color: #ffffff;
+		transition: 300ms;
+	}
+
+	.admin__btn:hover {
 		background-color: #1565D8;
 		color: #ffffff;
 		transition: 300ms;

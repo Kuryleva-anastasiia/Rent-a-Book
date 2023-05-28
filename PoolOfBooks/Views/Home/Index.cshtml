@@ -1,4 +1,6 @@
-﻿<section class="main">
+﻿@model IEnumerable<PoolOfBooks.Models.Books>
+
+<section class="main">
       <div class="container">
         <div class="main-wrap">
           <div class="main-content">
@@ -26,8 +28,8 @@
           <!-- /.main-content -->
           <div class="main__img-wrap">
             <img
-              src="../img/main-book.jpg"
-              alt="Book: The Psychology of Graphic Design Pricing"
+              src="~/img/books/106.jpg"
+              alt="Book: Богатый папа, бедный папа"
               class="main__img"
             />
           </div>
@@ -44,232 +46,101 @@
           <div class="books-top__recs recs">
             <h2 class="books-top__title">Новинки</h2>
             <div class="recs__products products">
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/the-world-of-abstract-art.jpg"
-                    alt="Book: The World of Abstract Art"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">
-                    The World of Abstract Art
-                  </h4>
-                  <span class="products-card__collection">Art & Design</span>
-                  <span class="products-card__price">250 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
+                    @{
+                        var newest = Model.OrderByDescending(x => x.id);
+                    }
+                    @for(int i = 0; i < 6; i++)
+                    {
+                        <div class="products-card products__card">
+                        <div class="products-card__wrap-img">
+                            @{
+                                var books = newest.ElementAt(i);
+
+                                string btnStr = "";
+                                if (books.status == "аренда")
+                                {
+                                    btnStr = "Хочу прочитать";
+                                }
+                                else
+                                {
+                                    btnStr = "Купить";
+                                }
+                            }
+                                <a href="~/Books/Details/@(books.id)">
+                          <img
+                            src="~/img/books/@(books.id).jpg"
+                                 alt="Book: @books.name"
+                            class="products-card__img" />
+                                </a>
+                        </div>
+                        <!-- /.products-card__wrap-img -->
+                        <div class="products-card__content">
+                          <h4 class="products-card__title">
+                            @books.name
+                          </h4>
+                            <span class="products-card__collection">@books.Category.name</span>
+                          <span class="products-card__price">@books.price &#8381;</span>
+                          <div class="products-card__wrap-btn">
+                             <a href="~/Books/Details/@books.id">
+                            <button class="button products-card__btn">@btnStr</button>
+                            </a>
+                          </div>
+                        </div>
+                        <!-- /.products-card__content -->
+                      </div>
+                      <!-- /.products-card products__card -->
+                    }
                     
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/educated.jpg"
-                    alt="Book: Educated : a Memoir"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">Educated : a&nbsp;Memoir</h4>
-                  <span class="products-card__collection">Education</span>
-                  <span class="products-card__price">280 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
-                    
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/the-blue-flowers.jpg"
-                    alt="Book: The Blue Flowers"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">The Blue Flowers Ray…</h4>
-                  <span class="products-card__collection">Novel</span>
-                  <span class="products-card__price">190 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
-                    
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/there-there.jpg"
-                    alt="Book: There There : a Novel by TO"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">
-                    There There : a&nbsp;Novel by TO
-                  </h4>
-                  <span class="products-card__collection">Novel</span>
-                  <span class="products-card__price">200 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
-                    
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/wmndfl.jpg"
-                    alt="Book: WMNDFL : The Inspiration"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">
-                    WMNDFL : The&nbsp;Inspiration
-                  </h4>
-                  <span class="products-card__collection">Business</span>
-                  <span class="products-card__price">230 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
-                    
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
-              <div class="products-card products__card">
-                <div class="products-card__wrap-img">
-                  <img
-                    src="img/recs/making-things-happen.jpg"
-                    alt="Book: Making Things Happen"
-                    class="products-card__img"
-                  />
-                </div>
-                <!-- /.products-card__wrap-img -->
-                <div class="products-card__content">
-                  <h4 class="products-card__title">
-                    Making Things&nbsp;Happen
-                  </h4>
-                  <span class="products-card__collection">Motivation</span>
-                  <span class="products-card__price">230 &#8381;</span>
-                  <div class="products-card__wrap-btn">
-                    <button class="button products-card__btn">Хочу прочитать</button>
-                    
-                  </div>
-                </div>
-                <!-- /.products-card__content -->
-              </div>
-              <!-- /.products-card products__card -->
             </div>
             <!-- /.recs__products products -->
             <a href="#" class="button recs__btn">Больше новинок</a>
           </div>
           <!-- .recs -->
           <div class="books-top__month-top month-top">
-            <h2 class="books-top__title books-top__title_mb_3">Топ Месяца</h2>
+            <h2 class="books-top__title books-top__title_mb_3">Популярные</h2>
             <div class="month-top__wrap">
-              <div class="month-top-card month-top__card">
-                <div class="month-top-card__wrap-img">
-                  <img
-                    src="img/month-top/sprint.jpg"
-                    alt="Book: Sprint : Solve, Test in 5 Days"
-                    class="month-top-card__img"
-                  />
-                </div>
-                <!-- /.month-top-card__wrap-img -->
-                <div class="month-top-card__content">
-                  <h4 class="month-top-card__title">
-                    Sprint : Solve, Test in 5 Days
-                  </h4>
-                  <span class="month-top-card__price">230 &#8381;</span>
-                  <div class="month-top-card__wrap-btn">
-                    <button class="button month-top-card__btn">Хочу прочитать</button>
-                  </div>
-                </div>
-                <!-- /.month-top-card__content -->
-              </div>
-              <!-- /.month-top-card month-top__card -->
-              <div class="month-top-card month-top__card">
-                <div class="month-top-card__wrap-img">
-                  <img
-                    src="img/month-top/hacking-growth.jpg"
-                    alt="Book: Hacking Growth Break Problem"
-                    class="month-top-card__img"
-                  />
-                </div>
-                <!-- /.month-top-card__wrap-img -->
-                <div class="month-top-card__content">
-                  <h4 class="month-top-card__title">
-                    Hacking Growth Break Problem
-                  </h4>
-                  <span class="month-top-card__price">230 &#8381;</span>
-                  <div class="month-top-card__wrap-btn">
-                    <button class="button month-top-card__btn">Хочу прочитать</button>
-                  </div>
-                </div>
-                <!-- /.month-top-card__content -->
-              </div>
-              <!-- /.month-top-card month-top__card -->
-              <div class="month-top-card month-top__card">
-                <div class="month-top-card__wrap-img">
-                  <img
-                    src="img/month-top/very-nice.jpg"
-                    alt="Book: Very Nice a Novel by Mercy"
-                    class="month-top-card__img"
-                  />
-                </div>
-                <!-- /.month-top-card__wrap-img -->
-                <div class="month-top-card__content">
-                  <h4 class="month-top-card__title">
-                    Very Nice a Novel by Mercy
-                  </h4>
-                  <span class="month-top-card__price">230 &#8381;</span>
-                  <div class="month-top-card__wrap-btn">
-                    <button class="button month-top-card__btn">Хочу прочитать</button>
-                  </div>
-                </div>
-                <!-- /.month-top-card__content -->
-              </div>
-              <!-- /.month-top-card month-top__card -->
-              <div class="month-top-card month-top__card">
-                <div class="month-top-card__wrap-img">
-                  <img
-                    src="img/month-top/hooked.jpg"
-                    alt="Book: Hooked : How to Build Products"
-                    class="month-top-card__img"
-                  />
-                </div>
-                <!-- /.month-top-card__wrap-img -->
-                <div class="month-top-card__content">
-                  <h4 class="month-top-card__title">
-                    Hooked : How to Build Products
-                  </h4>
-                  <span class="month-top-card__price">230 &#8381;</span>
-                  <div class="month-top-card__wrap-btn">
-                    <button class="button month-top-card__btn">Хочу прочитать</button>
-                  </div>
-                </div>
-                <!-- /.month-top-card__content -->
-              </div>
-              <!-- /.month-top-card month-top__card -->
+                    @{
+                        var top = Model.OrderByDescending(x => x.count_was_read);
+                    }
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        
+                                var books = top.ElementAt(i);
+
+                                string btnStr = "";
+                                if (books.status == "аренда")
+                                {
+                                    btnStr = "Хочу прочитать";
+                                }
+                                else
+                                {
+                                    btnStr = "Купить";
+                                }
+                            
+                        <div class="month-top-card month-top__card">
+                            <div class="month-top-card__wrap-img">
+                                <a href="~/Books/Details/@(books.id)">
+                                <img src="~/img/books/@(books.id).jpg"
+                                     alt="Book: @books.name"
+                                     class="month-top-card__img" />
+                                </a>
+                            </div>
+                            <!-- /.month-top-card__wrap-img -->
+                            <div class="month-top-card__content">
+                                <h4 class="month-top-card__title">
+                                    @books.name
+                                </h4>
+                                <span class="month-top-card__price">@books.price &#8381;</span>
+                                <div class="month-top-card__wrap-btn">
+                                    <a href="~/Books/Details/@books.id">
+                                    <button class="button month-top-card__btn">@btnStr</button>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- /.month-top-card__content -->
+                        </div>
+                        <!-- /.month-top-card month-top__card -->
+                    }
               <a href="#" class="button month-top__btn">ЛУЧШИЕ КНИГИ</a>
             </div>
             <!-- /.month-top__wrap -->
@@ -296,7 +167,7 @@
               >
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/presentation.svg"
+                    src="~/img/collections/presentation.svg"
                     alt="Icon: presentation"
                     class="collections-slide__img"
                   />
@@ -316,7 +187,7 @@
               >
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/diamond.svg"
+                    src="~/img/collections/diamond.svg"
                     alt="Icon: diamond"
                     class="collections-slide__img"
                   />
@@ -336,7 +207,7 @@
               >
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/book.svg"
+                    src="~/img/collections/book.svg"
                     alt="Icon: book"
                     class="collections-slide__img"
                   />
@@ -351,7 +222,7 @@
               <div class="swiper-slide collections-slide collections__slide">
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/skills.svg"
+                    src="~/img/collections/skills.svg"
                     alt="Icon: skills"
                     class="collections-slide__img"
                   />
@@ -371,7 +242,7 @@
               >
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/book.svg"
+                    src="~/img/collections/book.svg"
                     alt="Icon: book"
                     class="collections-slide__img"
                   />
@@ -386,7 +257,7 @@
               <div class="swiper-slide collections-slide collections__slide">
                 <div class="collections-slide__content">
                   <img
-                    src="img/collections/skills.svg"
+                    src="~/img/collections/skills.svg"
                     alt="Icon: skills"
                     class="collections-slide__img"
                   />
@@ -423,51 +294,38 @@
             class="button unreleased__button unreleased__button_prev"
           ></button>
           <h2 class="unreleased__title">Распродажа</h2>
-
+            
           <div class="swiper unreleased__slider">
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper unreleased__slider-wrap">
               <!-- Slides -->
-              <div class="swiper-slide unreleased-slide unreleased__slide">
-                <img
-                  src="img/unpublished/logo-modernism.jpg"
-                  alt="Book: Logo Modernism"
-                  class="unreleased-slide__img"
-                />
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide unreleased-slide unreleased__slide">
-                <img
-                  src="img/unpublished/the-overdue-life.jpg"
-                  alt="Book: The Overdue Life Of Amy Byler"
-                  class="unreleased-slide__img"
-                />
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide unreleased-slide unreleased__slide">
-                <img
-                  src="img/unpublished/making-short-films.jpg"
-                  alt="Book: Making Short Films"
-                  class="unreleased-slide__img"
-                />
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide unreleased-slide unreleased__slide">
-                <img
-                  src="img/unpublished/on-web-typography.jpg"
-                  alt="Book: On Web Typography"
-                  class="unreleased-slide__img"
-                />
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide unreleased-slide unreleased__slide">
-                <img
-                  src="img/unpublished/after-the-end.jpg"
-                  alt="Book: After The End"
-                  class="unreleased-slide__img"
-                />
-              </div>
-              <!-- swiper-slide -->
+                    @{
+                        var sell = Model.Where(x => x.status == "продажа").ToList();
+                    }
+
+                    @for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            var books = sell.ElementAt(i);
+                            <div class="swiper-slide unreleased-slide unreleased__slide">
+                                <a href="~/Books/Details/@(books.id)">
+                                <img src="~/img/books/@(books.id).jpg"
+                                     alt="Book: @books.name"
+                                     class="unreleased-slide__img" />
+                                </a>
+                            </div>
+                            <!-- swiper-slide -->
+                        }
+                        catch (ArgumentOutOfRangeException ex)
+                        {
+                            break;
+
+                        }
+
+                    }
+              
+              
             </div>
             <!-- swiper-wrapper unreleased__slider-wrap -->
           </div>
@@ -494,7 +352,7 @@
                 href="https://www.youtube.com/watch?v=f9Ph9x4PdGk"
               >
                 <img
-                  src="img/authors/author-1.jpg"
+                  src="~/img/authors/author-1.jpg"
                   alt="Author's image"
                   class="authors__video-img authors__video-img_big"
                 />
@@ -514,7 +372,7 @@
                 href="https://www.youtube.com/watch?v=f9Ph9x4PdGk"
               >
                 <img
-                  src="img/authors/author-2.jpg"
+                  src="~/img/authors/author-2.jpg"
                   alt="Author's image"
                   class="authors__video-img"
                 />
@@ -533,7 +391,7 @@
                 href="https://www.youtube.com/watch?v=f9Ph9x4PdGk"
               >
                 <img
-                  src="img/authors/author-3.jpg"
+                  src="~/img/authors/author-3.jpg"
                   alt="Author's image"
                   class="authors__video-img"
                 />
@@ -552,7 +410,7 @@
                 href="https://www.youtube.com/watch?v=f9Ph9x4PdGk"
               >
                 <img
-                  src="img/authors/author-4.jpg"
+                  src="~/img/authors/author-4.jpg"
                   alt="Author's image"
                   class="authors__video-img"
                 />
@@ -582,7 +440,7 @@
           <div class="blog__cards">
             <div class="blog__left blog-left">
               <img
-                src="img/blog/post-1.jpg"
+                src="~/img/blog/post-1.jpg"
                 alt="Post photo"
                 class="blog-left__img"
               />
@@ -599,7 +457,7 @@
             <div class="blog__right blog-right">
               <div class="blog-right__card">
                 <img
-                  src="img/blog/post-2.jpg"
+                  src="~/img/blog/post-2.jpg"
                   alt="Post photo"
                   class="blog-right__img"
                 />
@@ -615,7 +473,7 @@
               <!-- /.blog-right__card -->
               <div class="blog-right__card">
                 <img
-                  src="img/blog/post-3.jpg"
+                  src="~/img/blog/post-3.jpg"
                   alt="Post photo"
                   class="blog-right__img"
                 />
@@ -631,7 +489,7 @@
               <!-- /.blog-right__card -->
               <div class="blog-right__card">
                 <img
-                  src="img/blog/post-4.jpg"
+                  src="~/img/blog/post-4.jpg"
                   alt="Post photo"
                   class="blog-right__img"
                 />

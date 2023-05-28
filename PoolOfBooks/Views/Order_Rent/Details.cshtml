@@ -4,51 +4,31 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<section class="login container">
+
+    <h1 class="form-title">Детали заказа @Html.DisplayFor(model => model.id)</h1>
 
 <div>
-    <h4>Order_Rent</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.date_begin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.date_begin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.date_end)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.date_end)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.sum)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.sum)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users.id)
-        </dd>
-    </dl>
+    
+    <p><strong class="book__feature">@Html.DisplayNameFor(model => model.date_begin):</strong><span>@Html.DisplayFor(model => model.date_begin)</span></p>
+
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.date_end):</strong><span>@Html.DisplayFor(m => m.date_end)</span></p>
+
+
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.sum):</strong><span>@Html.DisplayFor(m => m.sum)</span></p>
+
+
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.address):</strong><span>@Html.DisplayFor(m => m.address)</span></p>
+    
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.status):</strong><span>@Html.DisplayFor(m => m.status)</span></p>
+
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.Users.first_name):</strong><span>@Html.DisplayFor(m => m.Users.first_name)</span></p>
+    
+    <p><strong class="book__feature">@Html.DisplayNameFor(m => m.Users.last_name):</strong><span>@Html.DisplayFor(m => m.Users.last_name)</span></p>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <a class="admin__btn" asp-action="Edit" asp-route-id="@Model?.id">Редактировать</a> 
+    <a class="form-link" asp-action="Index">Вернуться</a>
 </div>
+
+</section>

@@ -6,7 +6,7 @@ namespace PoolOfBooks.Models
 {
     public class Users
     {
-        [ScaffoldColumn(false)]
+        [HiddenInput(DisplayValue = false)]
         public int id { get; set; }
         [DisplayName("Email")]
         [DataType(DataType.EmailAddress)]

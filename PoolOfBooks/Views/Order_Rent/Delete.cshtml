@@ -3,55 +3,39 @@
 @{
     ViewData["Title"] = "Delete";
 }
-
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Order_Rent</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.date_begin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.date_begin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.date_end)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.date_end)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.sum)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.sum)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Users)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Users.id)
-        </dd>
-    </dl>
     
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
-</div>
+<section class="login container">
+
+    <h1 class="form-title">Удаление заказа</h1>
+
+    <h3 class="form-title">Вы уверены, что хотите удалить заказ?</h3>
+
+        <div>
+
+        <p><strong class="book__feature">@Html.DisplayNameFor(model => model.id):</strong><span>@Html.DisplayFor(model => model.id)</span></p>
+
+        <p><strong class="book__feature">@Html.DisplayNameFor(model => model.date_begin):</strong><span>@Html.DisplayFor(model => model.date_begin)</span></p>
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.date_end):</strong><span>@Html.DisplayFor(m => m.date_end)</span></p>
+
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.sum):</strong><span>@Html.DisplayFor(m => m.sum)</span></p>
+
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.address):</strong><span>@Html.DisplayFor(m => m.address)</span></p>
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.status):</strong><span>@Html.DisplayFor(m => m.status)</span></p>
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.Users.first_name):</strong><span>@Html.DisplayFor(m => m.Users.first_name)</span></p>
+
+            <p><strong class="book__feature">@Html.DisplayNameFor(m => m.Users.last_name):</strong><span>@Html.DisplayFor(m => m.Users.last_name)</span></p>
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="id" />
+            <input type="submit" value="Удалить" class="btn btn-danger btn-primary" /> |
+        <a class="form-link" asp-action="Index">Вернуться</a>
+        </form>
+
+    </section>
+    

@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using NToastNotify;
+using Word = Microsoft.Office.Interop.Word;
+using Microsoft.AspNetCore.Hosting;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 namespace PoolOfBooks.Controllers
 {
@@ -16,13 +18,14 @@ namespace PoolOfBooks.Controllers
         private readonly PoolOfBooksContext _context;
         private readonly INotyfService _toastNotification;
         private readonly ILogger<UsersController> _logger;
+        IWebHostEnvironment _appEnvironment;
 
-
-        public UsersController(PoolOfBooksContext context, INotyfService toastNotification, ILogger<UsersController> logger)
+        public UsersController(PoolOfBooksContext context, INotyfService toastNotification, ILogger<UsersController> logger, IWebHostEnvironment appEnvironment)
         {
             _context = context;
             _toastNotification = toastNotification;
             _logger = logger;
+            _appEnvironment = appEnvironment;
         }
 
 
@@ -31,6 +34,19 @@ namespace PoolOfBooks.Controllers
             _toastNotification.Custom("Необходимо войти в свой аккаунт!", 6, "#602AC3", "fa fa-user");
             return RedirectToAction("Login");
         }
+
+        public IActionResult ReportNotify()
+        {
+            _toastNotification.Custom("Отчет создан в папке \"Отчеты\"!", 6, "#602AC3", "fa fa-user");
+            return RedirectToAction("Analize");
+        }
+        
+        public IActionResult ReportRentNotify()
+        {
+            _toastNotification.Custom("Отчет создан в папке \"Отчеты\"!", 6, "#602AC3", "fa fa-user");
+            return RedirectToAction("AnalizeRent");
+        }
+
         public IActionResult OrderNotify()
         {
             var id = User.FindFirst("ID").Value;
@@ -253,6 +269,201 @@ namespace PoolOfBooks.Controllers
         private bool UsersExists(int id)
         {
           return (_context.Users?.Any(e => e.id == id)).GetValueOrDefault();
+        }
+
+        // GET: Users/Analize
+        public IActionResult Analize()
+        {
+            _toastNotification.Warning("\nОтчет создан в папке Отчеты!\n", 10);
+
+            var orders = _context.Order_Buy_Books.Include(x => x.Order_Buy).Include(x => x.Books).Where(x => x.Order_Buy.date.Month == DateTime.Today.Month && x.Order_Buy.date.Year == DateTime.Today.Year).ToList();
+
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+                return View(orders);
+        }
+
+        
+
+        // POST: Users/Analize
+        [HttpPost, ActionName("Analize")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Analize(DateTime start, DateTime end, string file) {
+
+
+            Excel.Application winword = new Excel.Application()
+            {
+                //Отобразить Excel
+                Visible = true,
+                //Количество листов в рабочей книге
+                SheetsInNewWorkbook = 1
+            };
+            Excel.Application app = new Excel.Application();
+            
+            //Добавить рабочую книгу
+            Excel.Workbook workBook = app.Workbooks.Add(Type.Missing);
+
+            //Отключить отображение окон с сообщениями
+            app.DisplayAlerts = false;
+
+            //Получаем первый лист документа (счет начинается с 1)
+            Excel.Worksheet sheet = (Excel.Worksheet)app.Worksheets.get_Item(1);
+
+            //Название листа (вкладки снизу).
+            sheet.Name = string.Concat("Отчет ", start.ToString("dd.MM.yyyy"), " - ", end.ToString("dd.MM.yyyy"));
+
+            var orders = _context.Order_Buy_Books.Include(x => x.Order_Buy).Include(x => x.Books).Where(x => x.Order_Buy.date.Date >= start.Date && x.Order_Buy.date.Date <= end.Date).ToList();
+
+            
+            sheet.Cells[1, 1] = string.Concat("Промежуток времени: ");
+            sheet.Cells[1, 2] = string.Concat(start.ToString("dd.MM.yyyy"), " - ", end.ToString("dd.MM.yyyy"));
+
+            //заполнение имен столбцов в excel
+            
+                sheet.Cells[3, 1] = "Дата";
+                sheet.Cells[3, 2] = "id_книги";
+                sheet.Cells[3, 3] = "Название";
+                sheet.Cells[3, 4] = "Автор";
+                sheet.Cells[3, 5] = "Сумма";
+
+            decimal sum = 0;
+            int j = 4;
+
+            foreach (var order in orders)
+            {
+
+                sheet.Cells[j, 1] = order.Order_Buy.date.ToString("dd.MM.yyyy");
+                sheet.Cells[j, 2] = order.id_book;
+                sheet.Cells[j, 3] = order.Books.name.ToString();
+                sheet.Cells[j, 4] = order.Books.author.ToString();
+                sheet.Cells[j, 5] = order.Books.sellPrice.Value;
+                j++;
+                sum += order.Books.sellPrice.Value;
+            }
+
+            sheet.Cells[j, 4] = "Итог:";
+            sheet.Cells[j, 5] = sum;
+            sheet.Cells[j, 5].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft; 
+            sheet.Cells[j, 4].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight; 
+
+            sheet.Columns.AutoFit();
+
+            // и места где его нужно сохранить*/
+            app.Application.ActiveWorkbook.SaveAs($"{_appEnvironment.WebRootPath}/Отчеты/{file}.xlsx", Type.Missing,
+              Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange,
+              Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+
+            
+
+            app.Quit();
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+
+            winword.Quit();
+
+
+            return Redirect("~/Users/ReportNotify");
+        }
+
+        // GET: Users/Analize
+        public IActionResult AnalizeRent()
+        {
+
+            var orders = _context.Order_Rent_Books.Include(x => x.Order_Rent).Include(x => x.Books).Where(x => x.Order_Rent.date_begin.Month == DateTime.Today.Month && x.Order_Rent.date_begin.Year == DateTime.Today.Year).ToList();
+
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+            return View(orders);
+        }
+
+
+
+        // POST: Users/Analize
+        [HttpPost, ActionName("AnalizeRent")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AnalizeRent(DateTime start, DateTime end, string file)
+        {
+
+            Excel.Application winword = new Excel.Application()
+            {
+                //Отобразить Excel
+                Visible = true,
+                //Количество листов в рабочей книге
+                SheetsInNewWorkbook = 1
+            };
+            Excel.Application app = new Excel.Application();
+
+            //Добавить рабочую книгу
+            Excel.Workbook workBook = app.Workbooks.Add(Type.Missing);
+
+            //Отключить отображение окон с сообщениями
+            app.DisplayAlerts = false;
+
+            //Получаем первый лист документа (счет начинается с 1)
+            Excel.Worksheet sheet = (Excel.Worksheet)app.Worksheets.get_Item(1);
+
+            //Название листа (вкладки снизу).
+            sheet.Name = string.Concat("Отчет ", start.ToString("dd.MM.yyyy"), " - ", end.ToString("dd.MM.yyyy"));
+
+            var orders = _context.Order_Rent_Books.Include(x => x.Order_Rent).Include(x => x.Books).Where(x => x.Order_Rent.date_begin.Date >= start.Date && x.Order_Rent.date_begin.Date <= end.Date).ToList();
+
+
+            sheet.Cells[1, 1] = string.Concat("Промежуток времени: ");
+            sheet.Cells[1, 2] = string.Concat(start.ToString("dd.MM.yyyy"), " - ", end.ToString("dd.MM.yyyy"));
+
+            //заполнение имен столбцов в excel
+
+            sheet.Cells[3, 1] = "Дата начала";
+            sheet.Cells[3, 2] = "Дата конца";
+            sheet.Cells[3, 3] = "id_книги";
+            sheet.Cells[3, 4] = "Название";
+            sheet.Cells[3, 5] = "Автор";
+            sheet.Cells[3, 6] = "Сумма";
+
+            decimal sum = 0;
+            int j = 4;
+
+            foreach (var order in orders)
+            {
+
+                sheet.Cells[j, 1] = order.Order_Rent.date_begin.ToString("dd.MM.yyyy");
+                sheet.Cells[j, 2] = order.Order_Rent.date_end.ToString("dd.MM.yyyy");
+                sheet.Cells[j, 3] = order.id_book;
+                sheet.Cells[j, 4] = order.Books.name.ToString();
+                sheet.Cells[j, 5] = order.Books.author.ToString();
+                sheet.Cells[j, 6] = order.Books.price.Value;
+                j++;
+                sum += order.Books.price.Value;
+            }
+
+            sheet.Cells[j, 5] = "Итог:";
+            sheet.Cells[j, 6] = sum;
+            sheet.Cells[j, 6].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignLeft;
+            sheet.Cells[j, 5].HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
+
+            sheet.Columns.AutoFit();
+
+            // и места где его нужно сохранить*/
+            app.Application.ActiveWorkbook.SaveAs($"{_appEnvironment.WebRootPath}/Отчеты/{file}.xlsx", Type.Missing,
+              Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange,
+              Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+
+
+
+            app.Quit();
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+
+            winword.Quit();
+
+
+            return Redirect("~/Users/ReportRentNotify");
         }
     }
 }

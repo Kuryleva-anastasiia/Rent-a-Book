@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PoolOfBooks.Data;
 using PoolOfBooks.Models;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace PoolOfBooks.Controllers
@@ -7,16 +10,24 @@ namespace PoolOfBooks.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+        private readonly PoolOfBooksContext _context;
 
-		public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, PoolOfBooksContext context)
 		{
 			_logger = logger;
+			_context = context;
 		}
 
-		public IActionResult Index()
+	
+
+		public async Task<IActionResult> IndexAsync()
 		{
-			return View();
-		}
+
+            return _context.Books != null ?
+                         View(await _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).Include(o => o.Category).ToListAsync()) :
+                         Problem("Entity set 'PoolOfBooksContext.Books'  is null.");
+        }
 
 		public IActionResult Privacy()
 		{

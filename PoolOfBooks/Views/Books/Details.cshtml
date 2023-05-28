@@ -10,20 +10,28 @@
 
 <section class="login container">
 <div class="book">
+        
     <div class="book__wrap-img">
         <a action="get" href="~/Books/Details/@id">
             <img src="~/img/books/@(id).jpg"
                  alt="Book: @(name)"
                  class="products-card__img" />
         </a>
-
-
     </div>
     <div class="book__wrap-content">
             <h1 class="form-title">@Html.DisplayFor(m => m.name)</h1>
 
             <strong>
-                <span class="book__price">@Html.DisplayFor(m => m.price) &#8381;</span>
+                @if(Model.status == "аренда")
+                {
+                    <span class="book__price">@Html.DisplayFor(m => m.price) &#8381;</span>
+                }
+                else
+                {
+                    <span class="book__price">@Html.DisplayFor(m => m.sellPrice) &#8381;</span>
+                }
+                    
+
             </strong>
 
             <p><strong class="book__feature">@Html.DisplayNameFor(m => m.author):</strong><span>@Html.DisplayFor(m => m.author)</span></p>
@@ -52,6 +60,12 @@
                 <a href="~/Users/LoginNotify">
                     <button class="button book__btn">В корзину</button>
                 </a>
+            }
+            @if (User.IsInRole("admin"))
+            {
+                <a href="~/Books/Edit/@Model.id" class="admin__btn">Редактировать</a>
+
+                <a href="~/Books/Delete/@Model.id" class="admin__btn">Удалить</a>
             }
     </div>
     

@@ -39,7 +39,6 @@ namespace PoolOfBooks.Data
             .HasForeignKey(e => e.userId)
             .IsRequired();
 
-           
 
             modelBuilder.Entity<Books>()
             .HasMany(e => e.Carts)
@@ -78,6 +77,13 @@ namespace PoolOfBooks.Data
             .WithOne(e => e.Order_Buy)
             .HasForeignKey(e => e.id_order)
             .IsRequired();
+
+            modelBuilder.Entity<Order_Buy_Books>()
+            .HasOne(e => e.Order_Buy)
+            .WithMany(e => e.BuyBooks)
+            .HasForeignKey(e => e.id_order)
+            .IsRequired();
+
 
             modelBuilder.Entity<Books>()
             .HasMany(e => e.BuyBooks)
