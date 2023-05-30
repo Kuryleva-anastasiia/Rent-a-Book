@@ -26,29 +26,52 @@ namespace PoolOfBooks.Controllers
 
 
         // GET: Books
-        public async Task<IActionResult> Index(string? name, string? category, SortState sortOrder = SortState.NameAsc)
+        public async Task<IActionResult> Index(string? name, string? category, string? sort, SortState sortOrder = SortState.NameAsc)
         {
-            ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["AuthorSort"] = sortOrder == SortState.AuthorAsc ? SortState.AuthorDesc : SortState.AuthorAsc;
-            ViewData["PriceSort"] = sortOrder == SortState.PriceAsc ? SortState.PriceDesc : SortState.PriceAsc;
-            ViewData["StatusSort"] = sortOrder == SortState.StatusRent ? SortState.StatusBuy : SortState.StatusRent;
+            //ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            //ViewData["AuthorSort"] = sortOrder == SortState.AuthorAsc ? SortState.AuthorDesc : SortState.AuthorAsc;
+            //ViewData["PriceSort"] = sortOrder == SortState.PriceAsc ? SortState.PriceDesc : SortState.PriceAsc;
+            //ViewData["StatusSort"] = sortOrder == SortState.StatusRent ? SortState.StatusBuy : SortState.StatusRent;
 
             if (_context.Books != null)
             {
                 IQueryable<Books>? books = _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).Include(o => o.Category);
 
                 //сортировка по названию, автору, цене и статусу
-                books = sortOrder switch
+                // сортировка
+                switch (sort)
                 {
-                    SortState.NameDesc => books.OrderByDescending(s => s.name),
-                    SortState.AuthorAsc => books.OrderBy(s => s.author),
-                    SortState.AuthorDesc => books.OrderByDescending(s => s.author),
-                    SortState.PriceAsc => books.OrderBy(s => s.price),
-                    SortState.PriceDesc => books.OrderByDescending(s => s.price),
-                    SortState.StatusRent => books.Where(s => s.status == "аренда"),
-                    SortState.StatusBuy => books.Where(s => s.status == "продажа"),
-                    _ => books.OrderBy(s => s.name),
-                };
+                    case "По названию А-Я":
+                        books = books.OrderByDescending(s => s.name);
+                        break;
+                    case "По названию Я-А":
+                        books = books.OrderByDescending(s => s.name);
+                        break;
+                    case "По автору А-Я":
+                        books = books.OrderBy(s => s.author);
+                        break;
+                    case "По автору Я-А":
+                        books = books.OrderByDescending(s => s.author);
+                        break;
+                    case "По возрастанию цены":
+                        books = books.OrderBy(s => s.price);
+                        break;
+                    case "По убыванию цены":
+                        books = books.OrderByDescending(s => s.price);
+                        break;
+                    case "Арендовать книгу":
+                        books = books.OrderBy(s => s.status == "аренда");
+                        break;
+                    case "Купить книгу":
+                        books = books.OrderBy(s => s.status == "продажа");
+                        break;
+                    default:
+                        books = books.OrderBy(s => s.name);
+                        break;
+                }
+
+                List<string> sortList = new List<string>() { "По названию А-Я", "По названию Я-А", "По автору А-Я", "По автору Я-А", "По возрастанию цены", "По убыванию цены", "Арендовать книгу", "Купить книгу" };
+                
 
                 List<Category> categoriesList = _context.Category.ToList();
                 // устанавливаем начальный элемент, который позволит выбрать всех
@@ -66,6 +89,12 @@ namespace PoolOfBooks.Controllers
                     books = books.Where(p => p.name!.Contains(name) || p.author!.Contains(name));
                     ViewData["name"] = name;
                 }
+
+                if (sort != null)
+                {
+                    ViewData["sort"] = new SelectList(sortList, sort);
+                }
+                else { ViewData["sort"] = new SelectList(sortList, "По названию А-Я"); }
 
                 return View(await books.ToListAsync());
 

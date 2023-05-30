@@ -6,12 +6,12 @@
 @if(User.IsInRole("admin")){
         <a href="~/Books/Create" class="admin__btn">Добавить книгу</a>
     }
-
-    <div class="sort">
+    <form method="get">
+    @*<div class="sort">
         <ul class="sort-list">
             
             <li class="sort-list__item">Сортировка:</li>
-            
+
             <a class="sort-list__item" asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
             <li>По названию</li></a>
             
@@ -25,14 +25,22 @@
             <li>Аренда / Покупка</li></a>
             
         </ul>
-    </div>
-    <form method="get">
+    </div>*@
+    
         <div>
-            <label class="control-label">Имя: </label>
+            <div class="form-group d-inline-block">
+            <label class="control-label">Сортировка: </label>
+            <select class="form-control mr-30" name="sort" asp-items="@ViewBag.sort"></select>
+            </div>
+            <div class="form-group d-inline-block">
+            <label class="control-label">Поиск: </label>
             <input class="form-control mr-30" name="name" value="@ViewBag.name"/>
-
-            <label class="control-label">Компания: </label>
+            </div>
+             
+            <div class="form-group d-inline-block">
+            <label class="control-label">Жанр: </label>
             <select class="form-control mr-30" name="category" asp-items="@ViewBag.category"></select>
+            </div>
 
             <input type="submit" value="Фильтр" class="btn btn-primary"/>
         </div>

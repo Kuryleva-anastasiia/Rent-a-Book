@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
+using Microsoft.AspNetCore.Components.WebAssembly.Services;
 using PoolOfBooks.Models;
 using System.Security.Claims;
 
@@ -27,6 +28,9 @@ builder.Services.AddNotyf(config =>
 builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/Users/Login");
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<LazyAssemblyLoader>();
+
 
 var app = builder.Build();
 

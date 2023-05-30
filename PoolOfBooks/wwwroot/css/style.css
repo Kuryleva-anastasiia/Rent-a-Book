@@ -1579,6 +1579,7 @@ hr {
 	font-size: 15px;
 	line-height: 15px;
 	margin-right: 24px;
+	color: #183b56;
 }
 
 .btn-primary {
@@ -1755,6 +1756,7 @@ hr {
 	justify-content: space-between;
 	flex-wrap: wrap;
 	padding-left: 0;
+	margin-bottom: 20px;
 }
 
 	.sort-list:first-child {
@@ -1811,9 +1813,13 @@ hr {
 	margin-right: 30px;
 }
 
+.d-inline-block {
+	display: inline-block;
+}
 
-	@media (max-width: 1200px) {
-		.container {
+
+@media (max-width: 1200px) {
+	.container {
 		max-width: 960px;
 	}
 
