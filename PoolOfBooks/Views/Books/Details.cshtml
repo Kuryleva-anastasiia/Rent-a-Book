@@ -9,6 +9,12 @@
 
 
 <section class="login container">
+    @if (User.IsInRole("admin"))
+    {
+        <a style="display: inline-block;" href="~/Books/Edit/@Model.id" class="admin__btn">Редактировать</a>
+
+        <a style="display: inline-block;" href="~/Books/Delete/@Model.id" class="admin__btn">Удалить</a>
+    }
 <div class="book">
         
     <div class="book__wrap-img">
@@ -61,14 +67,9 @@
                     <button class="button book__btn">В корзину</button>
                 </a>
             }
-            @if (User.IsInRole("admin"))
-            {
-                <a href="~/Books/Edit/@Model.id" class="admin__btn">Редактировать</a>
-
-                <a href="~/Books/Delete/@Model.id" class="admin__btn">Удалить</a>
-            }
+           
     </div>
-    
+        
 
 </div>
     <div class="book__description-wrap">

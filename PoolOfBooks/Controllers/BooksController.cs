@@ -9,6 +9,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
+using Windows.System;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace PoolOfBooks.Controllers
@@ -25,7 +26,7 @@ namespace PoolOfBooks.Controllers
 
 
         // GET: Books
-        public async Task<IActionResult> Index(SortState sortOrder = SortState.NameAsc)
+        public async Task<IActionResult> Index(string? name, string? category, SortState sortOrder = SortState.NameAsc)
         {
             ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             ViewData["AuthorSort"] = sortOrder == SortState.AuthorAsc ? SortState.AuthorDesc : SortState.AuthorAsc;
@@ -36,6 +37,7 @@ namespace PoolOfBooks.Controllers
             {
                 IQueryable<Books>? books = _context.Books.Include(o => o.RentBooks).Include(o => o.Carts).Include(o => o.Category);
 
+                //сортировка по названию, автору, цене и статусу
                 books = sortOrder switch
                 {
                     SortState.NameDesc => books.OrderByDescending(s => s.name),
@@ -48,6 +50,23 @@ namespace PoolOfBooks.Controllers
                     _ => books.OrderBy(s => s.name),
                 };
 
+                List<Category> categoriesList = _context.Category.ToList();
+                // устанавливаем начальный элемент, который позволит выбрать всех
+                categoriesList.Insert(0, new Category { name = "Все", id = 0 });
+
+                //Поиск по названию и автору и фильтр по жанру
+                if (category != null && Convert.ToInt32(category) != 0)
+                {
+                    books = books.Where(p => p.id_category == Convert.ToInt32(category));
+                    ViewData["category"] = new SelectList(categoriesList, "id", "name", category);
+                }else ViewData["category"] = new SelectList(categoriesList, "id", "name");
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    books = books.Where(p => p.name!.Contains(name) || p.author!.Contains(name));
+                    ViewData["name"] = name;
+                }
+
                 return View(await books.ToListAsync());
 
             }
@@ -56,9 +75,12 @@ namespace PoolOfBooks.Controllers
                 Problem("Entity set 'PoolOfBooksContext.Books'  is null.");
             }
 
+            ViewData["category"] = new SelectList(_context.Category, "id", "name");
+
             return View();
 
         }
+
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)

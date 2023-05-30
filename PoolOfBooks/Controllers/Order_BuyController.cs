@@ -48,7 +48,7 @@ namespace PoolOfBooks.Controllers
         // GET: Order_Buy/Create
         public IActionResult Create()
         {
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id");
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "login");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace PoolOfBooks.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "login", order_Buy.id_client);
             return View(order_Buy);
         }
 
@@ -82,7 +82,8 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "login", order_Buy.id_client);
+            ViewData["status"] = new SelectList(new List<string> { "Создан", "Собран", "Доставлен", "Получен", "В аренде", "Выполнен", "Продлен" }, order_Buy.status);
             return View(order_Buy);
         }
 
@@ -98,8 +99,7 @@ namespace PoolOfBooks.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
                     _context.Update(order_Buy);
@@ -117,9 +117,7 @@ namespace PoolOfBooks.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Buy.id_client);
-            return View(order_Buy);
+            
         }
 
         // GET: Order_Buy/Delete/5

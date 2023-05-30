@@ -29,7 +29,7 @@ namespace PoolOfBooks.Controllers
                          Problem("Entity set 'PoolOfBooksContext.Books'  is null.");
         }
 
-		public IActionResult Privacy()
+		public IActionResult Company()
 		{
 			return View();
 		}

@@ -9,7 +9,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Word = Microsoft.Office.Interop.Word;
 using Microsoft.AspNetCore.Hosting;
 using Excel = Microsoft.Office.Interop.Excel;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PoolOfBooks.Controllers
 {
@@ -106,21 +106,31 @@ namespace PoolOfBooks.Controllers
             {
                 if (users.login != null && users.password != null)
                 {
+                    var count = _context.Users.Where(u => u.login == users.login).Count();
 
-                    try
+                    if (count == 0)
                     {
-                        
-                        users.password = Crypto.Hash(users.password.ToString(), "SHA-256");
+                        try
+                        {
 
-                        _context.Add(users);
-                        await _context.SaveChangesAsync();
-                        _toastNotification.Success("Вы успешно зарегистрированы!");
-                        return Redirect($"~/Users/SignIn/{users.id}");
+                            users.password = Crypto.Hash(users.password.ToString(), "SHA-256");
+
+                            _context.Add(users);
+                            await _context.SaveChangesAsync();
+                            _toastNotification.Success("Вы успешно зарегистрированы!");
+                            return Redirect($"~/Users/SignIn/{users.id}");
+                        }
+                        catch (Exception ex)
+                        {
+                            _toastNotification.Error("Ошибка регистрации!\n" + ex.Message);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        _toastNotification.Error("Ошибка регистрации!\n" + ex.Message);
+                        _toastNotification.Error("Аккаунт с таким логином уже существует!");
                     }
+
+                    
                 }
                 else {
                     _toastNotification.Error("Логин и пароль обязательны для заполнения!");
@@ -141,14 +151,14 @@ namespace PoolOfBooks.Controllers
         public IActionResult Login([Bind("login,password")] Users model)
         {
 
-            if (ModelState.IsValid)
-            {
+            
                 if (model.login != null && model.password != null)
                 {
 
 
                     var p = Crypto.Hash(model.password, "SHA-256");
 
+                    
 
                     var user = _context.Users.FirstOrDefaultAsync(u => u.login == model.login && u.password == p);
 
@@ -171,10 +181,6 @@ namespace PoolOfBooks.Controllers
                 {
                     _toastNotification.Error("Введите логин и пароль!");
                 }
-            }
-            else { 
-                    _toastNotification.Error("Введены некорректные данные!");
-            }
             return View();
         }
 
@@ -191,6 +197,7 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
+            ViewData["role"] = new SelectList(new List<string> { "client", "admin" }, "client");
             return View(users);
         }
 
@@ -227,6 +234,24 @@ namespace PoolOfBooks.Controllers
                 return Redirect($"~/Users/Details/{users.id}");
             }
             return Redirect($"~/Users/Details/{users.id}");
+        }
+
+        // GET: Users/DitailsForAdmin/5
+        public async Task<IActionResult> DetailsForAdmin(int? id)
+        {
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var users = await _context.Users
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            return View(users);
         }
 
         // GET: Users/Delete/5

@@ -26,6 +26,17 @@
             
         </ul>
     </div>
+    <form method="get">
+        <div>
+            <label class="control-label">Имя: </label>
+            <input class="form-control mr-30" name="name" value="@ViewBag.name"/>
+
+            <label class="control-label">Компания: </label>
+            <select class="form-control mr-30" name="category" asp-items="@ViewBag.category"></select>
+
+            <input type="submit" value="Фильтр" class="btn btn-primary"/>
+        </div>
+    </form>
     
 <div class="catalog">
 

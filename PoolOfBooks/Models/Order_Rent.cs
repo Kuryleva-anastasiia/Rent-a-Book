@@ -18,13 +18,13 @@ namespace PoolOfBooks.Models
 
         [DisplayName("Дата начала аренды")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         [Required]
         public DateTime date_begin { get; set; }
 
         [DisplayName("Дата конца аренды")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd.MM.yyyy}")]
         [Required]
         public DateTime date_end { get; set; }
 
@@ -43,7 +43,7 @@ namespace PoolOfBooks.Models
 
         public Users Users { get; set; } = null!;
         public ICollection<Order_Rent_Books> RentBooks { get; } = new List<Order_Rent_Books>();
-
+        public Order_Rent() { }
         public Order_Rent(int id_client, DateTime date_begin, DateTime date_end, decimal? sum, string? address, string? status)
         {
             this.id_client = id_client;

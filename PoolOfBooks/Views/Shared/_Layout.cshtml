@@ -44,6 +44,9 @@
                             <a href="~/Home/Index" class="nav__link">Главная</a>
                         </li>
                         <li class="nav__item">
+                            <a href="~/Home/Company" class="nav__link">О нас</a>
+                        </li>
+                        <li class="nav__item">
                             <a href="~/Books/Index" class="nav__link">Каталог</a>
                         </li>
                         @if(User.Identity.IsAuthenticated){
@@ -86,16 +89,21 @@
                     <img src="~/img/logo.png"
                          alt="Logotype: Ehya"
                          class="logo footer__logo" />
-                    <span class="footer__description">Создайте современный и креативный веб-сайт с crealand</span>
+                    <span class="footer__description">Сайт создан Курылевой Анастасией<br/>Санкт-Петербург</span>
                     <div class="footer__social-networks">
-                        <i class="footer__icon fab fa-google"></i>
-                        <i class="footer__icon fab fa-twitter"></i>
-                        <i class="footer__icon fab fa-instagram"></i>
-                        <i class="footer__icon fab fa-linkedin"></i>
+                        <a style="text-decoration: none;" href="https://github.com/Kuryleva-anastasiia/tour-plan" target="_blank">
+                            <i class="footer__icon fab fa-github"></i>
+                            </a>
+                        <a style="text-decoration: none;" href="https://vk.com/n_a_s_t_u_h_a_tut" target="_blank">
+                            <i class="footer__icon fab fa-vk"></i>
+                        </a>
+                        <a style="text-decoration: none;" href="https://t.me/Web_anastasia" target="_blank">
+                            <i class="footer__icon fab fa-telegram"></i>
+                        </a>
                     </div>
                 </div>
                 <!-- /.footer__contacts -->
-                <div class="footer__products">
+                @*<div class="footer__products">
                     <h4 class="footer__title">Продукт</h4>
                     <ul class="footer__list">
                         <li class="footer__item">
@@ -114,9 +122,9 @@
                             <a href="#" class="footer__link">Расценки</a>
                         </li>
                     </ul>
-                </div>
+                </div>*@
                 <!-- /.footer__products -->
-                <div class="footer__services">
+                @*<div class="footer__services">
                     <h4 class="footer__title">Сервисы</h4>
                     <ul class="footer__list">
                         <li class="footer__item">
@@ -135,9 +143,9 @@
                             <a href="#" class="footer__link">UI Kit</a>
                         </li>
                     </ul>
-                </div>
+                </div>*@
                 <!-- /.footer__services -->
-                <div class="footer__company">
+                @*<div class="footer__company">
                     <h4 class="footer__title">Компания</h4>
                     <ul class="footer__list">
                         <li class="footer__item">
@@ -153,9 +161,14 @@
                             <a href="#" class="footer__link">Careers</a>
                         </li>
                     </ul>
+                </div>*@
+                <div class="footer__bottom">
+                    <i class="footer__icon footer__icon_big fas fa-heart"></i>
+                    <span class="footer__copyright">Copyright © 2023. Crafted with love.</span>
                 </div>
+                <!-- /.footer__bottom -->
                 <!-- /.footer__company -->
-                <div class="footer__else">
+                @*<div class="footer__else">
                     <h4 class="footer__title">Еще..</h4>
                     <ul class="footer__list">
                         <li class="footer__item">
@@ -169,18 +182,14 @@
                         </li>
                     </ul>
                 </div>
-                <!-- /.footer__else -->
+                <!-- /.footer__else -->*@
             </div>
             <!-- /.footer__wrap -->
-            <div class="footer__bottom">
-                <i class="footer__icon footer__icon_big fas fa-heart"></i>
-                <span class="footer__copyright">Copyright © 2019. Crafted with love.</span>
-            </div>
-            <!-- /.footer__bottom -->
+            
         </div>
         <!-- /.container -->
     </footer>
-
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>

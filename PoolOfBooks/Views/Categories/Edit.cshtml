@@ -4,10 +4,10 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<section class="login container">
 
-<h4>Category</h4>
-<hr />
+<h1 class="form-title">Редактирование категории</h1>
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
@@ -19,15 +19,17 @@
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+        <a class="form-link" asp-action="Index">Вернуться</a>
 </div>
+
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

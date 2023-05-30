@@ -4,10 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<section class="login container">
+
+<h1 class="form-title">Категории книг</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="form-link"asp-action="Create">Добавить новую категорию</a>
 </p>
 <table class="table">
     <thead>
@@ -25,11 +27,12 @@
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+                        <a class="form-link" asp-action="Edit" asp-route-id="@item.id">Редактировать</a> |
+                        <a class="form-link" asp-action="Details" asp-route-id="@item.id">Детали</a> |
+                        <a class="form-link" asp-action="Delete" asp-route-id="@item.id">Удалить</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</section>

@@ -79,7 +79,7 @@ namespace PoolOfBooks.Controllers
             {
                 return NotFound();
             }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "last_name" ,order_Rent.id_client);
+            ViewData["id_client"] = new SelectList(_context.Users, "id", "login" ,order_Rent.id_client);
 
             ViewData["status"] = new SelectList(new List<string> { "Создан", "Собран", "Доставлен", "Получен", "В аренде", "Выполнен", "Продлен" }, order_Rent.status);
 
@@ -98,8 +98,7 @@ namespace PoolOfBooks.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
                     _context.Update(order_Rent);
@@ -117,9 +116,8 @@ namespace PoolOfBooks.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["id_client"] = new SelectList(_context.Users, "id", "id", order_Rent.id_client);
-            return View(order_Rent);
+            
+            
         }
 
         // GET: Order_Rent/Delete/5
