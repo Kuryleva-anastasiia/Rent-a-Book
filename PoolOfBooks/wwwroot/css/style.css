@@ -2292,6 +2292,16 @@ hr {
 		padding: 100px 0 46px;
 	}
 
+	.main-content {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		justify-content: space-between;
+		align-items: center;
+		min-height: 450px;
+	}
+
 	.main-content__title {
 		font-size: 32px;
 		line-height: 40px;
@@ -2315,6 +2325,8 @@ hr {
 	.main-content__btn {
 		font-size: 16px;
 		line-height: 22px;
+		margin-right: 0;
+		display: inline-block;
 	}
 
 	.books-top__wrap {
@@ -2604,6 +2616,12 @@ hr {
 
 	.footer__wrap {
 		padding-top: 42px;
+		flex-direction: column-reverse;
+	}
+
+	.footer__contacts {
+		margin-bottom: 50px;
+		align-items: center;
 	}
 
 	.footer__products, .footer__services, .footer__company {
@@ -2926,7 +2944,6 @@ hr {
 
 	.footer__contacts {
 		align-items: center;
-		margin: 44px auto 0;
 		text-align: center;
 	}
 

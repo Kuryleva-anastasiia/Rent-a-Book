@@ -28,10 +28,6 @@ namespace PoolOfBooks.Controllers
         // GET: Books
         public async Task<IActionResult> Index(string? name, string? category, string? sort, SortState sortOrder = SortState.NameAsc)
         {
-            //ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            //ViewData["AuthorSort"] = sortOrder == SortState.AuthorAsc ? SortState.AuthorDesc : SortState.AuthorAsc;
-            //ViewData["PriceSort"] = sortOrder == SortState.PriceAsc ? SortState.PriceDesc : SortState.PriceAsc;
-            //ViewData["StatusSort"] = sortOrder == SortState.StatusRent ? SortState.StatusBuy : SortState.StatusRent;
 
             if (_context.Books != null)
             {
