@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using PoolOfBooks.Data;
 using PoolOfBooks.Models;
-using Windows.System;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace PoolOfBooks.Controllers
 {
@@ -38,7 +31,7 @@ namespace PoolOfBooks.Controllers
                 switch (sort)
                 {
                     case "По названию А-Я":
-                        books = books.OrderByDescending(s => s.name);
+                        books = books.OrderBy(s => s.name);
                         break;
                     case "По названию Я-А":
                         books = books.OrderByDescending(s => s.name);
@@ -56,10 +49,10 @@ namespace PoolOfBooks.Controllers
                         books = books.OrderByDescending(s => s.price);
                         break;
                     case "Арендовать книгу":
-                        books = books.OrderBy(s => s.status == "аренда");
+                        books = books.Where(s => s.status == "аренда");
                         break;
                     case "Купить книгу":
-                        books = books.OrderBy(s => s.status == "продажа");
+                        books = books.Where(s => s.status == "продажа");
                         break;
                     default:
                         books = books.OrderBy(s => s.name);

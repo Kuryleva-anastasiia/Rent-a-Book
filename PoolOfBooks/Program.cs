@@ -1,4 +1,4 @@
-﻿using Azure;
+﻿
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Authentication;
@@ -13,7 +13,7 @@ builder.Services.AddDbContext<PoolOfBooksContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PoolOfBooksContext") ?? throw new InvalidOperationException("Connection string 'PoolOfBooksContext' not found.")));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 // Add ToastNotification
 builder.Services.AddNotyf(config =>

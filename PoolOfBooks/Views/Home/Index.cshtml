@@ -1,130 +1,125 @@
 ﻿@model IEnumerable<PoolOfBooks.Models.Books>
 
 <section class="main">
-      <div class="container">
+    <div class="container">
         <div class="main-wrap">
-          <div class="main-content">
-            <h1 class="main-content__title">
-              <span class="main-content__title main-content__title_bright"
-                >Богатый папа,
-                </span
-              ><br />Бедный папа
-            </h1>
-            <span class="main-content__author">КНИГА Роберта Кийосаки</span>
-            <!-- /.main-content__author -->
-            <p class="main-content__description">
-              Автор убежден, что в школе дети не получают нужных знаний о деньгах и потом всю жизнь работают ради денег, вместо того чтобы заставить деньги работать на себя.
-            </p>
-            <!-- /.main-content__description -->
+            <div class="main-content">
+                <h1 class="main-content__title">
+                    <span class="main-content__title main-content__title_bright">
+                        Богатый папа,
+                    </span><br />Бедный папа
+                </h1>
+                <span class="main-content__author">КНИГА Роберта Кийосаки</span>
+                <!-- /.main-content__author -->
+                <p class="main-content__description">
+                    Автор убежден, что в школе дети не получают нужных знаний о деньгах и потом всю жизнь работают ради денег, вместо того чтобы заставить деньги работать на себя.
+                </p>
+                <!-- /.main-content__description -->
                 <a href="~/Books/Details/106" class="button main-content__btn main-content__btn_fill">
                     АРЕНДОВАТЬ СЕЙЧАС
-            </a>
+                </a>
                 <a href="https://www.litres.ru/book/robert-kiyosaki/bogatyy-papa-bednyy-papa-119256/" target="_blank"
-              class="button main-content__btn main-content__btn_transparent"
-            >
-              ЧИТАТЬ ДЕМО
-            </a>
-          </div>
-          <!-- /.main-content -->
-          <div class="main__img-wrap">
-            <img
-              src="~/img/books/108.jpg"
-              alt="Book: Богатый папа, бедный папа"
-              class="main__img"
-            />
-          </div>
-          <!-- /.main__img -->
+                   class="button main-content__btn main-content__btn_transparent">
+                    ЧИТАТЬ ДЕМО
+                </a>
+            </div>
+            <!-- /.main-content -->
+            <div class="main__img-wrap">
+                <img src="~/img/books/108.jpg"
+                     alt="Book: Богатый папа, бедный папа"
+                     class="main__img" />
+            </div>
+            <!-- /.main__img -->
         </div>
         <!-- /.main-wrap -->
-      </div>
-      <!-- /.container -->
-    </section>
-    <section class="books-top">
-      <a id="recs"></a>
-      <div class="container">
+    </div>
+    <!-- /.container -->
+</section>
+<section class="books-top">
+    <a id="recs"></a>
+    <div class="container">
         <div class="books-top__wrap">
-          <div class="books-top__recs recs">
-            <h2 class="books-top__title">Новинки</h2>
-            <div class="recs__products products">
+            <div class="books-top__recs recs">
+                <h2 class="books-top__title">Новинки</h2>
+                <div class="recs__products products">
                     @{
                         var newest = Model.OrderByDescending(x => x.id);
                     }
-                    @for(int i = 0; i < 6; i++)
+                    @for (int i = 0; i < 6; i++)
                     {
                         <div class="products-card products__card">
-                        <div class="products-card__wrap-img">
-                            @{
-                                var books = newest.ElementAt(i);
+                            <div class="products-card__wrap-img">
+                                @{
+                                    var books = newest.ElementAt(i);
 
-                                string btnStr = "";
-                                if (books.status == "аренда")
-                                {
-                                    btnStr = "Хочу прочитать";
+                                    string btnStr = "";
+                                    if (books.status == "аренда")
+                                    {
+                                        btnStr = "Хочу прочитать";
+                                    }
+                                    else
+                                    {
+                                        btnStr = "Купить";
+                                    }
                                 }
-                                else
-                                {
-                                    btnStr = "Купить";
-                                }
-                            }
                                 <a href="~/Books/Details/@(books.id)">
-                          <img
-                            src="~/img/books/@(books.id).jpg"
+                                    <img src="~/img/books/@(books.id).jpg"
                                          loading="lazy"
-                                 alt="Book: @books.name"
-                            class="products-card__img" />
+                                         alt="Book: @books.name"
+                                         class="products-card__img" />
                                 </a>
+                            </div>
+                            <!-- /.products-card__wrap-img -->
+                            <div class="products-card__content">
+                                <h4 class="products-card__title">
+                                    @books.name
+                                </h4>
+                                <span class="products-card__collection">@books.Category.name</span>
+                                <span class="products-card__price">@books.price &#8381;</span>
+                                <div class="products-card__wrap-btn">
+                                    <a href="~/Books/Details/@books.id">
+                                        <button class="button products-card__btn">@btnStr</button>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- /.products-card__content -->
                         </div>
-                        <!-- /.products-card__wrap-img -->
-                        <div class="products-card__content">
-                          <h4 class="products-card__title">
-                            @books.name
-                          </h4>
-                            <span class="products-card__collection">@books.Category.name</span>
-                          <span class="products-card__price">@books.price &#8381;</span>
-                          <div class="products-card__wrap-btn">
-                             <a href="~/Books/Details/@books.id">
-                            <button class="button products-card__btn">@btnStr</button>
-                            </a>
-                          </div>
-                        </div>
-                        <!-- /.products-card__content -->
-                      </div>
-                      <!-- /.products-card products__card -->
+                        <!-- /.products-card products__card -->
                     }
-                    
+
+                </div>
+                <!-- /.recs__products products -->
+                <a href="#" class="button recs__btn">Больше новинок</a>
             </div>
-            <!-- /.recs__products products -->
-            <a href="#" class="button recs__btn">Больше новинок</a>
-          </div>
-          <!-- .recs -->
-          <div class="books-top__month-top month-top">
-            <h2 class="books-top__title books-top__title_mb_3">Популярные</h2>
-            <div class="month-top__wrap">
+            <!-- .recs -->
+            <div class="books-top__month-top month-top">
+                <h2 class="books-top__title books-top__title_mb_3">Популярные</h2>
+                <div class="month-top__wrap">
                     @{
                         var top = Model.OrderByDescending(x => x.count_was_read);
                     }
                     @for (int i = 0; i < 4; i++)
                     {
-                        
-                                var books = top.ElementAt(i);
 
-                                string btnStr = "";
-                                if (books.status == "аренда")
-                                {
-                                    btnStr = "Хочу прочитать";
-                                }
-                                else
-                                {
-                                    btnStr = "Купить";
-                                }
-                            
+                        var books = top.ElementAt(i);
+
+                        string btnStr = "";
+                        if (books.status == "аренда")
+                        {
+                            btnStr = "Хочу прочитать";
+                        }
+                        else
+                        {
+                            btnStr = "Купить";
+                        }
+
                         <div class="month-top-card month-top__card">
                             <div class="month-top-card__wrap-img">
                                 <a href="~/Books/Details/@(books.id)">
-                                <img src="~/img/books/@(books.id).jpg"
+                                    <img src="~/img/books/@(books.id).jpg"
                                          loading="lazy"
-                                     alt="Book: @books.name"
-                                     class="month-top-card__img" />
+                                         alt="Book: @books.name"
+                                         class="month-top-card__img" />
                                 </a>
                             </div>
                             <!-- /.month-top-card__wrap-img -->
@@ -135,7 +130,7 @@
                                 <span class="month-top-card__price">@books.price &#8381;</span>
                                 <div class="month-top-card__wrap-btn">
                                     <a href="~/Books/Details/@books.id">
-                                    <button class="button month-top-card__btn">@btnStr</button>
+                                        <button class="button month-top-card__btn">@btnStr</button>
                                     </a>
                                 </div>
                             </div>
@@ -143,164 +138,130 @@
                         </div>
                         <!-- /.month-top-card month-top__card -->
                     }
-              <a href="#" class="button month-top__btn">ЛУЧШИЕ КНИГИ</a>
+                    <a href="#" class="button month-top__btn">ЛУЧШИЕ КНИГИ</a>
+                </div>
+                <!-- /.month-top__wrap -->
             </div>
-            <!-- /.month-top__wrap -->
-          </div>
         </div>
-      </div>
-      <!-- /.container -->
-    </section>
-    <!-- /.books-top -->
-    <section class="collections">
-      <a id="books"></a>
-      <div class="container">
+    </div>
+    <!-- /.container -->
+</section>
+<!-- /.books-top -->
+<section class="collections">
+    <a id="books"></a>
+    <div class="container">
         <div class="collections__wrap">
-          <!-- Slider main container -->
-          <div class="swiper collections__slider">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper collections__slider-wrap">
-              <!-- Slides -->
-              <div
-                class="
+            <!-- Slider main container -->
+            <div class="swiper collections__slider">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper collections__slider-wrap">
+                    <!-- Slides -->
+                    <div class="
                   swiper-slide
                   collections-slide collections__slide collections__slide_1
-                "
-              >
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/presentation.svg"
-                    alt="Icon: presentation"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Фэнтези & Фантастика</h4>
-                  <span class="collections-slide__description"
-                    ><br></span
-                  >
-                </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
-              <div
-                class="
+                ">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/presentation.svg"
+                                 alt="Icon: presentation"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Фэнтези & Фантастика</h4>
+                            <span class="collections-slide__description"><br></span>
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
+                    <div class="
                   swiper-slide
                   collections-slide collections__slide collections__slide_2
-                "
-              >
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/diamond.svg"
-                    alt="Icon: diamond"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Книги на<br>иностранном языке</h4>
-                  <!-- <span class="collections-slide__description"
-                    >Книги о мотивации</span
-                  > -->
-                </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
-              <div
-                class="
+                ">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/diamond.svg"
+                                 alt="Icon: diamond"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Книги на<br>иностранном языке</h4>
+                            <!-- <span class="collections-slide__description"
+                              >Книги о мотивации</span
+                            > -->
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
+                    <div class="
                   swiper-slide
                   collections-slide collections__slide collections__slide_3
-                "
-              >
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/book.svg"
-                    alt="Icon: book"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Книги для детей</h4>
-                  <span class="collections-slide__description"
-                    ><br></span
-                  >
-                </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide collections-slide collections__slide">
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/skills.svg"
-                    alt="Icon: skills"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Бизнес & Финансы</h4>
-                  <span class="collections-slide__description"
-                    ><br>
-                  </span>
-                </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
-              <div
-                class="
+                ">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/book.svg"
+                                 alt="Icon: book"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Книги для детей</h4>
+                            <span class="collections-slide__description"><br></span>
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
+                    <div class="swiper-slide collections-slide collections__slide">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/skills.svg"
+                                 alt="Icon: skills"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Бизнес & Финансы</h4>
+                            <span class="collections-slide__description">
+                                <br>
+                            </span>
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
+                    <div class="
                   swiper-slide
                   collections-slide collections__slide collections__slide_5
-                "
-              >
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/book.svg"
-                    alt="Icon: book"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Комиксы & Манга</h4>
-                  <span class="collections-slide__description"
-                    ><br></span
-                  >
+                ">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/book.svg"
+                                 alt="Icon: book"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Комиксы & Манга</h4>
+                            <span class="collections-slide__description"><br></span>
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
+                    <div class="swiper-slide collections-slide collections__slide">
+                        <div class="collections-slide__content">
+                            <img src="~/img/collections/skills.svg"
+                                 alt="Icon: skills"
+                                 class="collections-slide__img" />
+                            <h4 class="collections-slide__title">Наука & Техника</h4>
+                            <span class="collections-slide__description">
+                                <br>
+                            </span>
+                        </div>
+                        <!-- /.collections-slide__content -->
+                    </div>
+                    <!-- swiper-slide -->
                 </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
-              <div class="swiper-slide collections-slide collections__slide">
-                <div class="collections-slide__content">
-                  <img
-                    src="~/img/collections/skills.svg"
-                    alt="Icon: skills"
-                    class="collections-slide__img"
-                  />
-                  <h4 class="collections-slide__title">Наука & Техника</h4>
-                  <span class="collections-slide__description"
-                    ><br>
-                  </span>
-                </div>
-                <!-- /.collections-slide__content -->
-              </div>
-              <!-- swiper-slide -->
+                <!-- swiper-wrapper collections__slider-wrap -->
             </div>
-            <!-- swiper-wrapper collections__slider-wrap -->
-          </div>
-          <!-- collections__slider -->
-          <button
-            class="button collections__button collections__button_next"
-          ></button>
-          <button
-            class="button collections__button collections__button_prev"
-          ></button>
+            <!-- collections__slider -->
+            <button class="button collections__button collections__button_next"></button>
+            <button class="button collections__button collections__button_prev"></button>
         </div>
         <!-- /.collections__wrap -->
-      </div>
-      <!-- /.container -->
-    </section>
-    <section class="unreleased" id="sale">
-      <div class="container">
+    </div>
+    <!-- /.container -->
+</section>
+<section class="unreleased" id="sale">
+    <div class="container">
         <div class="unreleased__wrap">
-          <button
-            class="button unreleased__button unreleased__button_next"
-          ></button>
-          <button
-            class="button unreleased__button unreleased__button_prev"
-          ></button>
-          <h2 class="unreleased__title">Распродажа</h2>
-            
-          <div class="swiper unreleased__slider">
-            <!-- Additional required wrapper -->
-            <div class="swiper-wrapper unreleased__slider-wrap">
-              <!-- Slides -->
+            <button class="button unreleased__button unreleased__button_next"></button>
+            <button class="button unreleased__button unreleased__button_prev"></button>
+            <h2 class="unreleased__title">Распродажа</h2>
+
+            <div class="swiper unreleased__slider">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper unreleased__slider-wrap">
+                    <!-- Slides -->
                     @{
                         var sell = Model.Where(x => x.status == "продажа").ToList();
                     }
@@ -312,10 +273,10 @@
                             var books = sell.ElementAt(i);
                             <div class="swiper-slide unreleased-slide unreleased__slide">
                                 <a href="~/Books/Details/@(books.id)">
-                                <img src="~/img/books/@(books.id).jpg"
+                                    <img src="~/img/books/@(books.id).jpg"
                                          loading="lazy"
-                                     alt="Book: @books.name"
-                                     class="unreleased-slide__img" />
+                                         alt="Book: @books.name"
+                                         class="unreleased-slide__img" />
                                 </a>
                             </div>
                             <!-- swiper-slide -->
@@ -327,115 +288,100 @@
                         }
 
                     }
-              
-              
+
+
+                </div>
+                <!-- swiper-wrapper unreleased__slider-wrap -->
             </div>
-            <!-- swiper-wrapper unreleased__slider-wrap -->
-          </div>
-          <!-- unreleased__slider -->
+            <!-- unreleased__slider -->
         </div>
         <!-- /.unreleased-wrap -->
-      </div>
-      <!-- /.container -->
-    </section>
-    <section class="authors">
-      <div class="container">
+    </div>
+    <!-- /.container -->
+</section>
+<section class="authors">
+    <div class="container">
         <div class="authors__wrap">
-          <div class="authors__title-wrap">
-            <h2 class="authors__title">Любимые Авторы Читателей</h2>
-            <p class="authors__description">
-              В этом разделе Вы можете познакомится поближе с авторами популярных книг. После просмотра вы точно найдете что&nbsp;почитать
-            </p>
-          </div>
-          <!-- /.authors__title-wrap -->
-          <div class="authors__video-wrap">
-            <div class="authors__video-card authors__video-card_big">
-              <a
-                data-fancybox
-                href="https://www.youtube.com/watch?v=denbbBWCsUs"
-              >
-                <img
-                  src="~/img/authors/author-1.jpg"
+            <div class="authors__title-wrap">
+                <h2 class="authors__title">Любимые Авторы Читателей</h2>
+                <p class="authors__description">
+                    В этом разделе Вы можете познакомится поближе с авторами популярных книг. После просмотра вы точно найдете что&nbsp;почитать
+                </p>
+            </div>
+            <!-- /.authors__title-wrap -->
+            <div class="authors__video-wrap">
+                <div class="authors__video-card authors__video-card_big">
+                    <a data-fancybox
+                       href="https://www.youtube.com/watch?v=denbbBWCsUs">
+                        <img src="~/img/authors/author-1.jpg"
                              loading="lazy"
-                  alt="Author's image"
-                  class="authors__video-img authors__video-img_big"
-                />
-                <i
-                  class="
+                             alt="Author's image"
+                             class="authors__video-img authors__video-img_big" />
+                        <i class="
                     authors__video-icon authors__video-icon_big
                     fas
                     fa-play
-                  "
-                ></i>
-              </a>
-            </div>
-            <!-- /.authors__video-card -->
-            <div class="authors__video-card">
-              <a
-                data-fancybox
+                  "></i>
+                    </a>
+                </div>
+                <!-- /.authors__video-card -->
+                <div class="authors__video-card">
+                    <a data-fancybox
                        href="https://www.youtube.com/watch?v=tXLYSnMIrXM">
-                <img
-                  src="~/img/authors/author-2.jpg"
+                        <img src="~/img/authors/author-2.jpg"
                              loading="lazy"
-                  alt="Author's image"
-                  class="authors__video-img"
-                />
-                <i class="authors__video-icon fas fa-play"></i>
-              </a>
-              <div class="authors__video-description">
-                <span class="authors__name">Робин Хобб</span>
-                <span class="authors__inscription">Автор Саги "Об&nbsp;Элденрингах"</span>
-              </div>
-              <!-- /.authors__video-description -->
-            </div>
-            <!-- /.authors__video-card -->
-            <div class="authors__video-card">
-              <a
-                data-fancybox
+                             alt="Author's image"
+                             class="authors__video-img" />
+                        <i class="authors__video-icon fas fa-play"></i>
+                    </a>
+                    <div class="authors__video-description">
+                        <span class="authors__name">Робин Хобб</span>
+                        <span class="authors__inscription">Автор Саги "Об&nbsp;Элденрингах"</span>
+                    </div>
+                    <!-- /.authors__video-description -->
+                </div>
+                <!-- /.authors__video-card -->
+                <div class="authors__video-card">
+                    <a data-fancybox
                        href="https://www.youtube.com/watch?v=tXLYSnMIrXM">
-                <img
-                  src="~/img/authors/author-3.jpg"
+                        <img src="~/img/authors/author-3.jpg"
                              loading="lazy"
-                  alt="Author's image"
-                  class="authors__video-img"
-                />
-                <i class="authors__video-icon fas fa-play"></i>
-              </a>
-              <div class="authors__video-description">
-                <span class="authors__name">Дж. М. Толкин</span>
-                <span class="authors__inscription">Автор цикла "Властелин колец"</span>
-              </div>
-              <!-- /.authors__video-description -->
-            </div>
-            <!-- /.authors__video-card -->
-            <div class="authors__video-card">
-              <a
-                data-fancybox
+                             alt="Author's image"
+                             class="authors__video-img" />
+                        <i class="authors__video-icon fas fa-play"></i>
+                    </a>
+                    <div class="authors__video-description">
+                        <span class="authors__name">Дж. М. Толкин</span>
+                        <span class="authors__inscription">Автор цикла "Властелин колец"</span>
+                    </div>
+                    <!-- /.authors__video-description -->
+                </div>
+                <!-- /.authors__video-card -->
+                <div class="authors__video-card">
+                    <a data-fancybox
                        href="https://www.youtube.com/watch?v=f9Ph9x4PdGk&t=13s">
-                <img
-                  src="~/img/authors/author-4.jpg"
+                        <img src="~/img/authors/author-4.jpg"
                              loading="lazy"
-                  alt="Author's image"
-                  class="authors__video-img"
-                />
-                <i class="authors__video-icon fas fa-play"></i>
-              </a>
-              <div class="authors__video-description">
-                <span class="authors__name">Лия Арден</span>
-                <span class="authors__inscription">Автор цикла "Золото в темной ночи"</span>
-              </div>
-              <!-- /.authors__video-description -->
+                             alt="Author's image"
+                             class="authors__video-img" />
+                        <i class="authors__video-icon fas fa-play"></i>
+                    </a>
+                    <div class="authors__video-description">
+                        <span class="authors__name">Лия Арден</span>
+                        <span class="authors__inscription">Автор цикла "Золото в темной ночи"</span>
+                    </div>
+                    <!-- /.authors__video-description -->
+                </div>
+                <!-- /.authors__video-card -->
             </div>
-            <!-- /.authors__video-card -->
-          </div>
-          <!-- /.authors__video-wrap -->
+            <!-- /.authors__video-wrap -->
         </div>
         <!-- /.authors__wrap -->
-      </div>
-      <!-- /.container -->
-    </section>
-    
-    @*<section class="blog">
+    </div>
+    <!-- /.container -->
+</section>
+
+@*<section class="blog">
       <a id="blog"></a>
       <div class="container">
         <div class="blog__wrap">
@@ -516,7 +462,7 @@
       </div>
       <!-- /.container -->
     </section>*@
-    @*<section class="subscribe">
+@*<section class="subscribe">
       <div class="container">
         <div class="subscribe__wrap">
           <h2 class="subscribe__title">
