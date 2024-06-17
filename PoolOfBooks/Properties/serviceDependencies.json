@@ -1,16 +1,9 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets"
-    },
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConStr",
+      "connectionId": "ConnectionStrings:PoolOfBooksContext",
       "dynamicId": null
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:PoolOfBooksContext"
     }
   }
 }

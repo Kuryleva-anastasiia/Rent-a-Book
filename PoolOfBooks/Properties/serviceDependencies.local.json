@@ -1,17 +1,10 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets.user"
-    },
     "mssql1": {
       "secretStore": "LocalSecretsFile",
       "type": "mssql.onprem",
-      "connectionId": "ConStr",
+      "connectionId": "ConnectionStrings:PoolOfBooksContext",
       "dynamicId": null
-    },
-    "mssql2": {
-      "type": "mssql.local",
-      "connectionId": "ConnectionStrings:PoolOfBooksContext"
     }
   }
 }
